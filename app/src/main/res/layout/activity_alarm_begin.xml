@@ -33,33 +33,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="3">
+
             <TextView
+                android:id="@+id/tv_alarm_alarm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/lato_bold"
+                android:gravity="center"
                 android:text="Báo thức"
-                android:gravity="center"
                 android:textColor="@color/white"
-                android:fontFamily="@font/lato_bold"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:textSize="16sp" />
+
             <TextView
+                android:id="@+id/tv_clock_alarm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/lato_bold"
+                android:gravity="center"
                 android:text="Đồng hồ"
-                android:gravity="center"
                 android:textColor="@color/white"
-                android:fontFamily="@font/lato_bold"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:textSize="16sp" />
+
             <TextView
-                android:text="Bấm giờ"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:fontFamily="@font/lato_bold"
+                android:id="@+id/tv_stopwatch_alarm"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/lato_bold"
+                android:gravity="center"
+                android:text="Bấm giờ"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
