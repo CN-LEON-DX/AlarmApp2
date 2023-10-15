@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.alarmapp.R;
 import com.example.alarmapp.clock.MainActivity_clock;
-import com.example.alarmapp.clock.SelectCountry_Activity;
+import com.example.alarmapp.clock.SelectClock_Activity;
 import com.example.alarmapp.stopwatch.MainActivity_stopwatch;
 
 import java.util.ArrayList;

@@ -45,7 +45,7 @@ public class SelectClockAdapterRecycler extends RecyclerView.Adapter<SelectClock
             super(itemView);
             country=(TextView) itemView.findViewById(R.id.tv_country);
             hour=(TextView)  itemView.findViewById(R.id.tv_itemhour);
-            minute=(TextView) itemView.findViewById(R.id.tv_minute);
+            minute=(TextView) itemView.findViewById(R.id.tv_itemminute);
             gmt=(TextView) itemView.findViewById(R.id.tv_itemgmt);
         }
         public void setData(SelectClock selectClock){

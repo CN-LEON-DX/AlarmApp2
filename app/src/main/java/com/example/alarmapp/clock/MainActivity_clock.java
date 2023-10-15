@@ -56,7 +56,7 @@ public class MainActivity_clock extends AppCompatActivity {
         addclock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity_clock.this, SelectCountry_Activity.class);
+                Intent intent=new Intent(MainActivity_clock.this, SelectClock_Activity.class);
                 startActivity(intent);
 
             }
