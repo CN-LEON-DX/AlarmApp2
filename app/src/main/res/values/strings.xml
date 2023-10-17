@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">AlarmApp</string>
     <string name="add_new_alarm">Add New Alarm</string>
+    <string name="s_a">Sửa</string>
+    <string name="b_o_th_c">Báo thức</string>
+    <string name="ng_h">Đồng hồ</string>
+    <string name="b_m_gi">Bấm giờ</string>
 </resources>

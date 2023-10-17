@@ -5,17 +5,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.alarmapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // YÊU CẦU: SAU KHI ĐẶT GIỜ THÀNH CÔNG THÌ CHỮ CỦA ITEM => WHITE
 public class MainActivity_Alarm_Begin_Activity extends AppCompatActivity {
+    private TextView tvEditting, tvMenuAlarm, tvMenuCalendar, tvMenuClock;
+    private FloatingActionButton fabAdd_Alarm;
     private RecyclerView recyclerView_Alarm;
-    private List<Alarm>  alarmList;
+    private List<Alarm> alarmList;
     private AlarmAdapterRecycler adapter_Alarm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,9 +30,17 @@ public class MainActivity_Alarm_Begin_Activity extends AppCompatActivity {
         adapter_Alarm = new AlarmAdapterRecycler(createAlarmList(), this);
         recyclerView_Alarm.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView_Alarm.setAdapter(adapter_Alarm);
+        // Find id
+        tvEditting = findViewById(R.id.tvEditting);
+        tvMenuAlarm = findViewById(R.id.tvMenuAlarm);
+        tvMenuCalendar = findViewById(R.id.tvMenuCalendar);
+        tvMenuClock = findViewById(R.id.tvMenuClock);
+        fabAdd_Alarm = findViewById(R.id.fabAddAlarm);
+
     }
+
     // Tạo một danh sách thông tin các báo thức
-    private List<Alarm> createAlarmList(){
+    private List<Alarm> createAlarmList() {
         alarmList = new ArrayList<>();
         alarmList.add(new Alarm("07:05", "Chào sáng vui vẻ !"));
         alarmList.add(new Alarm("12:03", "Buổi trưa !"));
@@ -41,4 +54,6 @@ public class MainActivity_Alarm_Begin_Activity extends AppCompatActivity {
         alarmList.add(new Alarm("09:18", "Làm vườn !"));
         return alarmList;
     }
+
+    // Xu ly su kien !
 }
