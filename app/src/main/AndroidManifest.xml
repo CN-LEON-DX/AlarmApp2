@@ -13,20 +13,26 @@
         android:theme="@style/Theme.AlarmApp"
         tools:targetApi="31">
         <activity
+            android:name=".dbAlarm.SuccessLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dbAlarm.LoginActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".alarm_pack.Editting_Alarm_Activity"
             android:exported="false" />
         <activity
             android:name=".alarm_pack.MainActivity_Alarm_Begin_Activity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
