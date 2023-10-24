@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:layout_weight="2"
+    tools:context=".Fragment.StopWatchFragment">
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_marginTop="20dp"
+        android:text="12:34,45"
+        android:textColor="#c4c4c4"
+        android:fontFamily="@font/lato_regular"
+        android:textSize="30sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvListStopWatch"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/tvTimer"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/ButtonTimer"
+        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:id="@+id/ButtonTimer"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnReset"
+            android:background="@drawable/button_reset_stopwatch"
+            android:text="Đặt lại"
+            android:textColor="#28a4fe"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"/>
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/button_continue_stopwatch"
+            android:textColor="@color/white"
+            android:text="Tiếp tục"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>

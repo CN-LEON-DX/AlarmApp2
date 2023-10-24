@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavigationViewTheme">
+        <item name="android:textColor">@color/white</item> <!-- Màu trắng cho văn bản -->
+        <item name="android:textColorHint">@color/grey</item> <!-- Màu xám cho văn bản chưa được chọn -->
+    </style>
+    <style name="timePickerOrange">
+        <item name="android:textColorPrimary">@color/white</item> <!-- color for digits -->
+        <item name="android:textColor">@color/white</item> <!-- color for colon -->
+        <item name="android:colorControlNormal">@color/white</item> <!-- color for (horizontal) delimeters -->
+    </style>
+</resources>
