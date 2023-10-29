@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.alarmapp.Adapter.Alarm;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
@@ -44,26 +45,30 @@ public class AlarmFragment extends Fragment {
         recyclerView_Alarm = view.findViewById(R.id.rcvList_Alarm);
         fabAdd_Alarm = view.findViewById(R.id.fabAddAlarm);
 
+
+
+
         // Tạo và cấu hình RecyclerView
         adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), createAlarmList());
         recyclerView_Alarm.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Alarm.setAdapter(adapter_Alarm);
+        adapter_Alarm.notifyDataSetChanged();
         return view;
     }
 
     // Tạo một danh sách thông tin các báo thức
     private List<Alarm> createAlarmList() {
         alarmList = new ArrayList<>();
-        alarmList.add(new Alarm("07:05", "Chào sáng vui vẻ !"));
-        alarmList.add(new Alarm("12:03", "Buổi trưa !"));
-        alarmList.add(new Alarm("08:11", "Làm bài tập !"));
-        alarmList.add(new Alarm("06:08", "Nghe nhạc !"));
-        alarmList.add(new Alarm("15:08", "Đọc truyện !"));
-        alarmList.add(new Alarm("16:18", "Chạy bộ !"));
-        alarmList.add(new Alarm("12:28", "Nấu ăn trưa !"));
-        alarmList.add(new Alarm("07:08", "Đi học ở trường !"));
-        alarmList.add(new Alarm("20:48", "Ăn tối !"));
-        alarmList.add(new Alarm("09:18", "Làm vườn !"));
+        alarmList.add(new Alarm("07:05", 1,"Chào sáng vui vẻ !"));
+        alarmList.add(new Alarm("12:03", 2,"Buổi trưa !"));
+        alarmList.add(new Alarm("08:11", 3,"Làm bài tập !"));
+        alarmList.add(new Alarm("06:08", 4,"Nghe nhạc !"));
+        alarmList.add(new Alarm("15:54", 5,"Đọc truyện !"));
+        alarmList.add(new Alarm("14:49", 6,"Chạy bộ !"));
+        alarmList.add(new Alarm("12:28", 8,"Nấu ăn trưa !"));
+        alarmList.add(new Alarm("08:55", 9,"Đi học ở trường !"));
+        alarmList.add(new Alarm("20:55", 10,"Ăn tối !"));
+        alarmList.add(new Alarm("09:18", 11,"Làm vườn !"));
         return alarmList;
     }
 }

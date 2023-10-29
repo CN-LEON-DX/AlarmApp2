@@ -5,6 +5,7 @@
     android:id="@+id/tab_clock"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textAllCaps="false"
     android:textSize="16sp"
+    android:text="Đồng hồ"
+    android:fontFamily="@font/lato_bold"
     android:textColor="@color/white" />

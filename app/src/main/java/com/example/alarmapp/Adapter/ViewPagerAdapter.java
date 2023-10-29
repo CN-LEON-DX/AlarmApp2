@@ -1,5 +1,7 @@
 package com.example.alarmapp.Adapter;
 
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;

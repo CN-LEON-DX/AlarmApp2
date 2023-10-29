@@ -2,10 +2,12 @@ package com.example.alarmapp.Adapter;
 
 public class Alarm {
     private String time_alarm;
+    private int id;
     private String message;
 
-    public Alarm(String time_alarm, String message) {
+    public Alarm(String time_alarm, int id, String message) {
         this.time_alarm = time_alarm;
+        this.id = id;
         this.message = message;
     }
 
@@ -28,5 +30,13 @@ public class Alarm {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
