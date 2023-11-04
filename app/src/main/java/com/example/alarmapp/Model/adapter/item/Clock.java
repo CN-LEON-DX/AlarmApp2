@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter.item;
+package com.example.alarmapp.Model.adapter.item;
 
 public class Clock {
     private String city;

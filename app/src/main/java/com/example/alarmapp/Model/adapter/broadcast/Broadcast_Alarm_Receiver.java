@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter.broadcast;
+package com.example.alarmapp.Model.adapter.broadcast;
 
 import static android.os.Build.VERSION_CODES.R;
 

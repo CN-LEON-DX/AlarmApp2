@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.alarmapp.Adapter.item.Clock;
-import com.example.alarmapp.Adapter.adapter.Clock_Recycler_Adapter;
+import com.example.alarmapp.Model.adapter.item.Clock;
+import com.example.alarmapp.Model.adapter.Adapter.Clock_Recycler_Adapter;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

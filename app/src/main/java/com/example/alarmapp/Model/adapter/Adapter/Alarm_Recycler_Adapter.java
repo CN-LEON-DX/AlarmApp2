@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter.adapter;
+package com.example.alarmapp.Model.adapter.Adapter;
 
 
 
@@ -20,8 +20,8 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.alarmapp.Adapter.broadcast.Broadcast_Alarm_Receiver;
-import com.example.alarmapp.Adapter.item.Alarm;
+import com.example.alarmapp.Model.adapter.broadcast.Broadcast_Alarm_Receiver;
+import com.example.alarmapp.Model.adapter.item.Alarm;
 import com.example.alarmapp.R;
 
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter.adapter;
+package com.example.alarmapp.Model.adapter.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.alarmapp.Adapter.item.StopWatch;
+import com.example.alarmapp.Model.adapter.item.StopWatch;
 import com.example.alarmapp.R;
 
 import java.util.List;
