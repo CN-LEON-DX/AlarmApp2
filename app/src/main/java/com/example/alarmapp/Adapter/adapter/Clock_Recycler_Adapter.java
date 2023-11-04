@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alarmapp.Adapter.item.Clock;
 import com.example.alarmapp.R;
 
 import java.util.List;

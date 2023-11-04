@@ -4,23 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@color/black">
 
-    <ImageView
-        android:id="@+id/imvClock"
-        android:layout_width="70dp"
-        android:layout_height="74dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/ic_clock" />
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@+id/imvClock"
         android:layout_weight="4"
         android:orientation="vertical">
 
@@ -34,16 +21,17 @@
             android:fontFamily="@font/lato_regular"
             android:text="Hà Nội"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/tvToday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
             android:layout_weight="2"
             android:fontFamily="@font/lato_regular"
-            android:text="Hôm nay"
+            android:text="GMT+7"
             android:textColor="#565656"
             android:textSize="16sp" />
     </LinearLayout>
@@ -54,8 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="14:26"
         android:fontFamily="@font/lato_regular"
+        android:text="14:26"
         android:textColor="@color/white"
         android:textSize="28sp" />
 </RelativeLayout>

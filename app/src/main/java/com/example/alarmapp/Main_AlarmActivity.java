@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.example.alarmapp.Adapter.ViewPagerAdapter;
+import com.example.alarmapp.Adapter.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -19,6 +20,7 @@ public class Main_AlarmActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private TableLayout tableLayout;
     private TextView tvEdit;
+    private SharedPreferences sharedPreferencesPut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,5 +101,9 @@ public class Main_AlarmActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("Tag_destroy","destroy");
+    }
 }

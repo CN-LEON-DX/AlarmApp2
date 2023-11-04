@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.broadcast;
 
 import static android.os.Build.VERSION_CODES.R;
 

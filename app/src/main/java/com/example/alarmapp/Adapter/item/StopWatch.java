@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.item;
 
 public class StopWatch {
     private String indexOf, timeRecord, timeAdd;
@@ -7,6 +7,9 @@ public class StopWatch {
         this.indexOf = indexOf;
         this.timeRecord = timeRecord;
         this.timeAdd = timeAdd;
+    }
+
+    public StopWatch() {
     }
 
     public String getIndexOf() {

@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.item;
 
 public class Alarm {
     private String time_alarm;

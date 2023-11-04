@@ -1,16 +1,13 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.adapter;
 
 
 
-import android.Manifest;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +17,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.alarmapp.Fragment.AlarmFragment;
-import com.example.alarmapp.Main_AlarmActivity;
+import com.example.alarmapp.Adapter.broadcast.Broadcast_Alarm_Receiver;
+import com.example.alarmapp.Adapter.item.Alarm;
 import com.example.alarmapp.R;
 
 import java.util.Calendar;

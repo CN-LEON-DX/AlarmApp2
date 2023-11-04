@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.adapter;
 
 import android.widget.TextView;
 

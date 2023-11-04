@@ -1,4 +1,4 @@
-package com.example.alarmapp.Adapter;
+package com.example.alarmapp.Adapter.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alarmapp.Adapter.item.StopWatch;
 import com.example.alarmapp.R;
 
 import java.util.List;
@@ -38,7 +39,10 @@ public class StopWatchAdapter extends RecyclerView.Adapter<StopWatchAdapter.Stop
     public int getItemCount() {
         return stopWatchList.isEmpty() ? 0 : stopWatchList.size();
     }
+    public void addItem(StopWatch stopWatch){
+        stopWatchList.add(stopWatch);
 
+    }
     class StopWatchViewHolder extends RecyclerView.ViewHolder{
         private TextView tvIndexOf, tvTimeRecord, tvTimeAdd;
         public StopWatchViewHolder(@NonNull View itemView) {
