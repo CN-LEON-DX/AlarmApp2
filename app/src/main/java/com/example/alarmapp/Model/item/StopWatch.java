@@ -1,4 +1,4 @@
-package com.example.alarmapp.Model.adapter.item;
+package com.example.alarmapp.Model.item;
 
 public class StopWatch {
     private String indexOf, timeRecord, timeAdd;

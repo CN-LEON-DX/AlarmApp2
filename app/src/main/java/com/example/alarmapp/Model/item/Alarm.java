@@ -1,4 +1,4 @@
-package com.example.alarmapp.Model.adapter.item;
+package com.example.alarmapp.Model.item;
 
 public class Alarm {
     private String time_alarm;

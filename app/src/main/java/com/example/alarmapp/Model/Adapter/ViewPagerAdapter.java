@@ -1,6 +1,4 @@
-package com.example.alarmapp.Model.adapter.Adapter;
-
-import android.widget.TextView;
+package com.example.alarmapp.Model.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

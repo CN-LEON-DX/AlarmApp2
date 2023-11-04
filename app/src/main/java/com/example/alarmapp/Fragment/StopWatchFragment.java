@@ -18,8 +18,9 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.alarmapp.Model.adapter.item.StopWatch;
-import com.example.alarmapp.Model.adapter.Adapter.StopWatchAdapter;
+
+import com.example.alarmapp.Model.Adapter.StopWatchAdapter;
+import com.example.alarmapp.Model.item.StopWatch;
 import com.example.alarmapp.R;
 import java.util.ArrayList;
 import java.util.List;
