@@ -39,10 +39,6 @@ public class StopWatchAdapter extends RecyclerView.Adapter<StopWatchAdapter.Stop
     public int getItemCount() {
         return stopWatchList.isEmpty() ? 0 : stopWatchList.size();
     }
-    public void addItem(StopWatch stopWatch){
-        stopWatchList.add(stopWatch);
-
-    }
     class StopWatchViewHolder extends RecyclerView.ViewHolder{
         private TextView tvIndexOf, tvTimeRecord, tvTimeAdd;
         public StopWatchViewHolder(@NonNull View itemView) {

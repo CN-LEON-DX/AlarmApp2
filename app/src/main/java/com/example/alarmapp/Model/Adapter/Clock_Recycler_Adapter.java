@@ -43,16 +43,19 @@ public class Clock_Recycler_Adapter extends RecyclerView.Adapter<Clock_Recycler_
     class ClockViewHolder extends RecyclerView.ViewHolder {
         private TextView tvCity;
         private TextView tvTimeCurrent;
+        private TextView tvGMT;
 
         public ClockViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTimeCurrent = itemView.findViewById(R.id.tvTimeCurrent);
-            tvCity = itemView.findViewById(R.id.tvCity);
+            tvCity = itemView.findViewById(R.id.tvCountry);
+            tvGMT = itemView.findViewById(R.id.tvGMT);
         }
         public void setData(Clock clock) {
-            if (clock.getTime() != null && clock.getCity()!= null){
+            if (clock.getTime() != null && clock.getCountry()!= null&&clock.getGmt()!=null){
                 tvTimeCurrent.setText(clock.getTime());
-                tvCity.setText(clock.getCity());
+                tvCity.setText(clock.getCountry());
+                tvGMT.setText(clock.getGmt());
             }
         }
     }

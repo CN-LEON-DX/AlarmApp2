@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.NOTIFICATION_POLICY_ACCESS" />
-    <application
 
+    <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,14 +22,20 @@
         android:theme="@style/Theme.AlarmApp"
         tools:targetApi="31" >
         <activity
-            android:name=".Main_AlarmActivity"
+            android:name=".Model.Activity.SelectClockActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Model.Activity.Main_AlarmActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="your.package.name.ACTION_WHATEVER" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".model2.broadcast.Broadcast_Alarm_Receiver" />
     </application>
+
 </manifest>

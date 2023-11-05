@@ -1,30 +1,33 @@
 package com.example.alarmapp.Model.item;
 
 public class Clock {
-    private String city;
-    private String today;
+    private String country;
+    private String gmt;
     private String time;
 
-    public Clock(String city, String time) {
-        this.city = city;
+    public Clock(String country, String gmt, String time) {
+        this.country = country;
+        this.gmt = gmt;
         this.time = time;
     }
 
-    public String getCity() {
-        return city;
+    public String getGmt() {
+        return gmt;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setGmt(String gmt) {
+        this.gmt = gmt;
     }
 
-    public String getToday() {
-        return today;
+    public String getCountry() {
+        return country;
     }
 
-    public void setToday(String today) {
-        this.today = today;
+    public void setCountry(String country) {
+        this.country = country;
     }
+
+    
 
     public String getTime() {
         return time;
