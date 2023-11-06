@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.alarmapp.Model.Adapter.Alarm_Recycler_Adapter;
-import com.example.alarmapp.Model.item.Alarm;
+import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
+import com.example.alarmapp.Base.Alarm;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

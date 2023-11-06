@@ -1,18 +1,16 @@
-package com.example.alarmapp.Model.Activity;
+package com.example.alarmapp.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.alarmapp.Fragment.ClockFragment;
-import com.example.alarmapp.Model.Adapter.SelectClockAdapter;
-import com.example.alarmapp.Model.item.Clock;
+import com.example.alarmapp.Adapter.SelectClockAdapter;
+import com.example.alarmapp.Base.Clock;
 import com.example.alarmapp.R;
 
 import java.util.ArrayList;

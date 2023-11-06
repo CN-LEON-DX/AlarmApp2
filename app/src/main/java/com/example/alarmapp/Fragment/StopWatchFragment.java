@@ -2,12 +2,9 @@ package com.example.alarmapp.Fragment;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +14,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.alarmapp.Model.Adapter.StopWatchAdapter;
-import com.example.alarmapp.Model.item.StopWatch;
+import com.example.alarmapp.Adapter.StopWatchAdapter;
+import com.example.alarmapp.Base.StopWatch;
 import com.example.alarmapp.R;
 import java.util.ArrayList;
 import java.util.List;

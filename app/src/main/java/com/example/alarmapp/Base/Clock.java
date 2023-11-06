@@ -1,4 +1,4 @@
-package com.example.alarmapp.Model.item;
+package com.example.alarmapp.Base;
 
 public class Clock {
     private String country;

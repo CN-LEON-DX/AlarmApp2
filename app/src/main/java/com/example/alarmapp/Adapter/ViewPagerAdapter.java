@@ -1,4 +1,4 @@
-package com.example.alarmapp.Model.Adapter;
+package com.example.alarmapp.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

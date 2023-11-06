@@ -22,10 +22,10 @@
         android:theme="@style/Theme.AlarmApp"
         tools:targetApi="31" >
         <activity
-            android:name=".Model.Activity.SelectClockActivity"
+            android:name=".Activity.SelectClockActivity"
             android:exported="false" />
         <activity
-            android:name=".Model.Activity.Main_AlarmActivity"
+            android:name=".Activity.Main_AlarmActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

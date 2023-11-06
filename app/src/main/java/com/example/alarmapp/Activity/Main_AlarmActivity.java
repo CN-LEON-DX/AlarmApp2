@@ -1,4 +1,4 @@
-package com.example.alarmapp.Model.Activity;
+package com.example.alarmapp.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -6,12 +6,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.example.alarmapp.Model.Adapter.ViewPagerAdapter;
+import com.example.alarmapp.Adapter.ViewPagerAdapter;
 import com.example.alarmapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
