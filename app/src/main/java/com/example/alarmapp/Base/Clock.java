@@ -15,11 +15,6 @@ public class Clock {
         this.city = city;
         this.time = time;
     }
-
-    public Clock(String city) {
-        this.city = city;
-    }
-
     public String getGmt() {
         return gmt;
     }

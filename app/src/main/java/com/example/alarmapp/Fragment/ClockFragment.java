@@ -2,10 +2,14 @@ package com.example.alarmapp.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextClock;
+import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,13 +20,19 @@ import com.example.alarmapp.Base.Clock;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 public class ClockFragment extends Fragment{
     private RecyclerView recyclerView_Clock;
     private List<Clock> clockList;
     private FloatingActionButton fabAdd_Clock;
-    private Clock_Recycler_Adapter adapter_Clock;
+    private TextView tvDate;
 
     public ClockFragment() {
         // Required empty public constructor
@@ -47,29 +57,23 @@ public class ClockFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
+        //find id
         recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
         fabAdd_Clock = view.findViewById(R.id.fabAddClock);
-        Clock_Recycler_Adapter clockRecyclerAdapter = new Clock_Recycler_Adapter(getContext(), createListLock());
+        tvDate =view.findViewById(R.id.tv_date);
+
+        //set Adapter
+        clockList = new ArrayList<>();
+        Clock_Recycler_Adapter clockRecyclerAdapter = new Clock_Recycler_Adapter(getContext(), clockList);
         recyclerView_Clock.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Clock.setAdapter(clockRecyclerAdapter);
         //set event
         setListenerForFabButton();
+        //set text tvDate
+        setDataForTvDate();
         return view;
     }
 
-    // Cần xử lý khi thêm các danh sách đòng hồ
-    public List<Clock> createListLock() {
-        clockList = new ArrayList<>();
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        clockList.add(new Clock("New York", "gmt+7","14:25"));
-        return clockList;
-    }
     public void setListenerForFabButton(){
         fabAdd_Clock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,5 +82,17 @@ public class ClockFragment extends Fragment{
                 startActivityForResult(intent,99);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+    public void setDataForTvDate(){
+        Date currentDate = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+        String date =dateFormat.format(currentDate);
+        tvDate.setText(date);
     }
 }
