@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".model2.broadcast.Broadcast_Alarm_Receiver" />
+        <receiver android:name=".Broadcast.Broadcast_Alarm_Receiver" />
     </application>
 
 </manifest>

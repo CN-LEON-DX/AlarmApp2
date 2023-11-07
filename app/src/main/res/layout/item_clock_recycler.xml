@@ -6,14 +6,16 @@
 
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
         android:layout_weight="4"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvCountry"
+            android:id="@+id/tvCity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -47,4 +49,5 @@
         android:text="14:26"
         android:textColor="@color/white"
         android:textSize="20sp" />
+
 </RelativeLayout>

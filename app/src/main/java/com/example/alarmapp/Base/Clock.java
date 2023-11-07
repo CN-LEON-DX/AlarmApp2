@@ -1,14 +1,23 @@
 package com.example.alarmapp.Base;
 
 public class Clock {
-    private String country;
+    private String city;
     private String gmt;
     private String time;
 
-    public Clock(String country, String gmt, String time) {
-        this.country = country;
+    public Clock(String city, String gmt, String time) {
+        this.city = city;
         this.gmt = gmt;
         this.time = time;
+    }
+
+    public Clock(String city, String time) {
+        this.city = city;
+        this.time = time;
+    }
+
+    public Clock(String city) {
+        this.city = city;
     }
 
     public String getGmt() {
@@ -19,12 +28,12 @@ public class Clock {
         this.gmt = gmt;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCity() {
+        return city;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     
