@@ -5,6 +5,9 @@ public class Clock {
     private String gmt;
     private String time;
 
+    public Clock() {
+    }
+
     public Clock(String city, String gmt, String time) {
         this.city = city;
         this.gmt = gmt;

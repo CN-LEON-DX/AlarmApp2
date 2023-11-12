@@ -33,6 +33,7 @@ public class ClockFragment extends Fragment{
     private List<Clock> clockList;
     private FloatingActionButton fabAdd_Clock;
     private TextView tvDate;
+    private Clock_Recycler_Adapter clockRecyclerAdapter;
 
     public ClockFragment() {
         // Required empty public constructor
@@ -64,13 +65,15 @@ public class ClockFragment extends Fragment{
 
         //set Adapter
         clockList = new ArrayList<>();
-        Clock_Recycler_Adapter clockRecyclerAdapter = new Clock_Recycler_Adapter(getContext(), clockList);
+        clockRecyclerAdapter = new Clock_Recycler_Adapter(getContext(), clockList);
         recyclerView_Clock.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Clock.setAdapter(clockRecyclerAdapter);
         //set event
         setListenerForFabButton();
         //set text tvDate
         setDataForTvDate();
+        TextClock textClock = view.findViewById(R.id.textClock);
+        Log.i("Tag_Test",String.valueOf(textClock.getText()));
         return view;
     }
 
@@ -87,7 +90,13 @@ public class ClockFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        if(requestCode==99&&resultCode==99&&data!=null){
+            Clock clock = new Clock();
+            clock.setCity(data.getStringExtra("city"));
+            clock.setTime(data.getStringExtra("time"));
+            clock.setGmt(data.getStringExtra("gmt"));
+            clockRecyclerAdapter.addClock(clock);
+        }
     }
     public void setDataForTvDate(){
         Date currentDate = Calendar.getInstance().getTime();
