@@ -93,8 +93,8 @@ public class ClockFragment extends Fragment{
         if(requestCode==99&&resultCode==99&&data!=null){
             Clock clock = new Clock();
             clock.setCity(data.getStringExtra("city"));
-            clock.setTime(data.getStringExtra("time"));
-            clock.setGmt(data.getStringExtra("gmt"));
+            clock.setTimeZone(data.getStringExtra("time"));
+            clock.setTimeDifferences(data.getStringExtra("gmt"));
             clockRecyclerAdapter.addClock(clock);
         }
     }

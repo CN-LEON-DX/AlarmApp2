@@ -1,30 +1,29 @@
 package com.example.alarmapp.Base;
 
 public class Clock {
+    int id;
     private String city;
-    private String gmt;
-    private String time;
+    private String timeDifferences;
+    private String timeZone;
 
     public Clock() {
     }
 
-    public Clock(String city, String gmt, String time) {
+    public Clock(int id, String city, String timeDifferences, String timeZone) {
+        this.id = id;
         this.city = city;
-        this.gmt = gmt;
-        this.time = time;
+        this.timeDifferences = timeDifferences;
+        this.timeZone = timeZone;
     }
 
-    public Clock(String city, String time) {
-        this.city = city;
-        this.time = time;
-    }
-    public String getGmt() {
-        return gmt;
+    public int getId() {
+        return id;
     }
 
-    public void setGmt(String gmt) {
-        this.gmt = gmt;
+    public void setId(int id) {
+        this.id = id;
     }
+
 
     public String getCity() {
         return city;
@@ -34,13 +33,19 @@ public class Clock {
         this.city = city;
     }
 
-    
-
-    public String getTime() {
-        return time;
+    public String getTimeDifferences() {
+        return timeDifferences;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeDifferences(String timeDifferences) {
+        this.timeDifferences = timeDifferences;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 }

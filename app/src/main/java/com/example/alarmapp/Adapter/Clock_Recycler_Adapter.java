@@ -56,10 +56,10 @@ public class Clock_Recycler_Adapter extends RecyclerView.Adapter<Clock_Recycler_
             tvGMT = itemView.findViewById(R.id.tvGMT);
         }
         public void setData(Clock clock) {
-            if (clock.getTime() != null && clock.getCity()!= null&&clock.getGmt()!=null){
-                tvTimeCurrent.setText(clock.getTime());
+            if (clock.getTimeZone() != null && clock.getCity()!= null&&clock.getTimeDifferences()!=null){
+                tvTimeCurrent.setText(clock.getTimeZone());
                 tvCity.setText(clock.getCity());
-                tvGMT.setText(clock.getGmt());
+                tvGMT.setText(clock.getTimeDifferences());
             }
         }
     }
