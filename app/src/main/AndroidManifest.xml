@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -20,13 +20,14 @@
         android:roundIcon="@drawable/clock2"
         android:supportsRtl="true"
         android:theme="@style/Theme.AlarmApp"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+
         <activity
             android:name=".Activity.SelectClockActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Main_AlarmActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="your.package.name.ACTION_WHATEVER" />
