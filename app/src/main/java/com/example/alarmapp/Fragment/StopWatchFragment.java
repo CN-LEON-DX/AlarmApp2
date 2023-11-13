@@ -2,15 +2,20 @@ package com.example.alarmapp.Fragment;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,11 +30,10 @@ public class StopWatchFragment extends Fragment {
     private List<StopWatch> stopWatchList;
     private TextView tvTimer;
     private Button btnStartAndStop,btnResetAndMark;
-    private Handler handler,handlerTimeAdd,handlerTimeRecord;
+    private Handler handler;
     private String nextStatus="start";
-    private Runnable runnable,runnableTimeAdd,runnableTimeRecord;
+    private Runnable runnable;
     private boolean isRunning =false;
-    private boolean isMarking=false;
     private long elapsedTime;
     private long elapsedTimeMark;
     private LinearLayout layout;
@@ -56,6 +60,13 @@ public class StopWatchFragment extends Fragment {
         tv_id=view.findViewById(R.id.tv_index);
         tv_timeRecord=view.findViewById(R.id.tv_timeRecordFragment);
         tv_timeAdd=view.findViewById(R.id.tv_timeAddedFragment);
+        //read from shared Preferences
+        sharedPreferences=getContext().getSharedPreferences("sharedPrefs",Context.MODE_PRIVATE);
+        isRunning=sharedPreferences.getBoolean("isRunning",false);
+        nextStatus=sharedPreferences.getString("nextStatus","test");
+        elapsedTime=sharedPreferences.getLong("elapsedTime",1);
+        updateUI();
+        Log.i("TAG_CREATE","isRunning:"+isRunning+" nexStatus:"+nextStatus+" elapsedTime:"+elapsedTime);
         //setup for recyclerView
         RecyclerView rcvStopWatch = view.findViewById(R.id.rcvListStopWatch);
         stopWatchList = new ArrayList<>();
@@ -65,48 +76,41 @@ public class StopWatchFragment extends Fragment {
         //set listener for button
         setListenerForBtnStartAndStop();
         setListenerForBtnResetAndMark();
-//        //setup read from sharedPreferences
-//        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getContext());
-//        sharedPreferences= getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-//        String nextStatus=sharedPreferences.getString("status","start");
-//        Long elapsedTime=sharedPreferences.getLong("elapsedTime",0);
-//        Boolean isRunning=sharedPreferences.getBoolean("isRunning",false);
-
         return view;
     }
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        sharedPreferences= getActivity().getPreferences(Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("status", nextStatus);
-//        editor.putBoolean("isRunning", isRunning);
-//        editor.putLong("elapsedTime", elapsedTime);
-//        Log.i("TAG_DESTROY","status:"+nextStatus+ " isRunning:"+isRunning+ " elapsedTime:"+elapsedTime);
-//        editor.apply();
-//    }
-//    private void updateUI() {
-//        // Cập nhật giao diện dựa trên giá trị đọc được
-//        if (nextStatus.equals("start")) {
-//            // Cài đặt giao diện cho trạng thái "start"
-//            btnStartAndStop.setText("Bắt đầu");
-//            btnResetAndMark.setVisibility(View.GONE);
-//            tvTimer.setText("00:00,00");
-//        } else if (nextStatus.equals("stop")) {
-//            // Cài đặt giao diện cho trạng thái "stop"
-//            btnStartAndStop.setText("Tạm dừng");
-//            btnResetAndMark.setText("Ghi");
-//            btnResetAndMark.setVisibility(View.VISIBLE);
-//            startTime(); // Bắt đầu tính thời gian lại nếu cần
-//        } else if (nextStatus.equals("continue")) {
-//            // Cài đặt giao diện cho trạng thái "continue"
-//            btnStartAndStop.setText("Tạm dừng");
-//            btnResetAndMark.setText("Ghi");
-//            btnResetAndMark.setVisibility(View.VISIBLE);
-//            startTime();
-//        }
-//    }
+    @Override
+    public void onStop() {
+        super.onStop();
 
+        sharedPreferences= getContext().getSharedPreferences("sharedPrefs",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("nextStatus",nextStatus);
+        editor.putBoolean("isRunning",isRunning);
+        editor.putLong("elapsedTime",elapsedTime);
+        editor.apply();
+        if(editor.commit())
+        Log.i("TAG_STOP","isRunning:"+isRunning+" nexStatus:"+nextStatus);
+    }
+
+    public void updateUI(){
+        if (nextStatus.equals("start")){
+            btnResetAndMark.setVisibility(View.GONE);
+            btnStartAndStop.setText("Bắt đầu");
+        } else if(nextStatus.equals("continue")){//đang stop
+            btnResetAndMark.setVisibility(View.VISIBLE);
+            btnStartAndStop.setText("tiếp tục");
+            btnResetAndMark.setText("Đặt Lại");
+            tvTimer.setText(calculateTime(elapsedTime));
+        } else if (nextStatus.equals("stop")) {//dang chạy
+            btnResetAndMark.setVisibility(View.VISIBLE);
+            btnStartAndStop.setText("Tạm dừng");
+            btnResetAndMark.setText("ghi");
+            if (handler!=null||runnable!=null){
+                handler.removeCallbacks(runnable);
+            }
+            startTime();
+        }
+    }
     @SuppressLint("DefaultLocale")
     public String calculateTime(long elapsedTime){
 
@@ -158,6 +162,7 @@ public class StopWatchFragment extends Fragment {
                     btnStartAndStop.setText("Tạm dừng");
                     btnResetAndMark.setText("ghi");
                     btnResetAndMark.setVisibility(View.VISIBLE);
+                    isRunning=true;
                 } else if (nextStatus.equals("stop")) {
                     handler.removeCallbacks(runnable);
                     nextStatus = "continue";
@@ -181,6 +186,7 @@ public class StopWatchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (nextStatus.equals("stop")) {
+                    isRunning=true;
                     layout.setVisibility(View.VISIBLE);
                     tv_id.setText(String.valueOf(stopWatchList.size()+2));
                     if(handler!=null&&runnable!=null)
@@ -192,15 +198,14 @@ public class StopWatchFragment extends Fragment {
                     stopWatch.setTimeAdd(calculateTime(elapsedTimeMark));
                     stopWatchList.add(0,stopWatch);
                     stopWatchAdapter.notifyItemInserted(0);
-                    isMarking=true;
-                    isRunning=true;
                 } else if (nextStatus.equals("continue")) {
                     isRunning = false;
                     nextStatus = "start";
                     elapsedTime=0;
                     elapsedTimeMark=0;
                     btnResetAndMark.setVisibility(View.GONE);
-                    handler.removeCallbacks(runnable);
+                    if(handler!=null||runnable!=null)
+                        handler.removeCallbacks(runnable);
                     tvTimer.setText("00:00,00");
                     btnStartAndStop.setText("Bắt đầu");
                     tv_timeRecord.setText("00:00,00");

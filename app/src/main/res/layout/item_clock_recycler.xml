@@ -37,6 +37,7 @@
             android:text="GMT+7"
             android:textColor="#565656"
             android:textSize="14sp" />
+
     </LinearLayout>
 
     <TextView

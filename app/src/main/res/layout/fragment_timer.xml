@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginStart="18dp"
-    android:layout_marginEnd="18dp"
-    android:layout_marginTop="160dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -11,66 +8,70 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/tvTimerMain"
-        android:layout_centerHorizontal="true"
-        android:text="00:00,00"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/white"
-        android:textSize="30sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="00:00,00"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
     <TextView
+        android:id="@+id/tvSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tvTimerMain"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="40dp"
-        android:id="@+id/tvSecond"
         android:text="second"
         android:textColor="#7A7777"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="16sp" />
+
     <TextView
-        android:layout_toStartOf="@+id/tvSecond"
+        android:id="@+id/tvMinute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tvTimerMain"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
-        android:id="@+id/tvMinute"
+        android:layout_toStartOf="@+id/tvSecond"
         android:text="minute"
         android:textColor="#7A7777"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="16sp" />
+
     <TextView
-        android:layout_toEndOf="@+id/tvSecond"
+        android:id="@+id/tvMillisecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tvTimerMain"
         android:layout_marginTop="80dp"
-        android:id="@+id/tvMillisecond"
+        android:layout_toEndOf="@+id/tvSecond"
         android:text="millisecond"
         android:textColor="#7A7777"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="16sp" />
 
     <!--Minute-->
     <Button
         android:id="@+id/btnUpMinute1"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
         android:layout_below="@+id/tvTimerMain"
         android:layout_alignLeft="@+id/tvMinute"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/baseline_arrow_upward_24"
         android:backgroundTint="#2196F3" />
+
     <Button
         android:id="@+id/btnDownMinute1"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
         android:layout_below="@+id/tvMinute"
         android:layout_alignLeft="@+id/tvMinute"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/baseline_arrow_downward_24"
         android:backgroundTint="#2196F3" />
 
@@ -79,20 +80,21 @@
         android:id="@+id/btnUpMinut2"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
         android:layout_below="@+id/tvTimerMain"
         android:layout_alignLeft="@+id/tvSecond"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/baseline_arrow_upward_24"
         android:backgroundTint="#2196F3" />
+
     <Button
         android:id="@+id/btnDownMinute2"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
         android:layout_below="@+id/tvSecond"
         android:layout_alignLeft="@+id/tvSecond"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/baseline_arrow_downward_24"
         android:backgroundTint="#2196F3" />
 
@@ -101,94 +103,92 @@
         android:id="@+id/btnUpMinute3"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="18dp"
         android:layout_below="@+id/tvTimerMain"
         android:layout_alignLeft="@+id/tvMillisecond"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/baseline_arrow_upward_24"
         android:backgroundTint="#2196F3" />
+
     <Button
         android:id="@+id/btnDownMinute3"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="18dp"
         android:layout_below="@+id/tvMinute"
         android:layout_alignLeft="@+id/tvMillisecond"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/baseline_arrow_downward_24"
         android:backgroundTint="#2196F3" />
 
     <!--Button set timer !-->
     <GridLayout
 
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/btnDownMinute2"
-        android:layout_above="@+id/btnStartTimer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:rowCount="3"
-        android:columnCount="3"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="36dp"
-        android:orientation="horizontal"
+        android:layout_above="@+id/btnStartTimer"
+        android:layout_below="@+id/btnDownMinute2"
         android:layout_gravity="center_horizontal"
-        >
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="36dp"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="3">
 
         <!-- Thành phần hàng 1, cột 1 -->
         <Button
-            android:background="@drawable/button_set_timer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_row="0"
             android:layout_column="0"
-            android:textColor="@color/white"
-            android:text="Đánh răng\n00:02,00"
+            android:background="@drawable/button_set_timer"
             android:lines="2"
             android:maxLines="2"
+            android:text="Đánh răng\n00:02,00"
             android:textAllCaps="false"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
+            android:textColor="@color/white" />
 
         <!-- Thành phần hàng 1, cột 2 -->
         <Button
-            android:background="@drawable/button_set_timer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_row="0"
             android:layout_column="1"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:textColor="@color/white"
-            android:text="Mặt nạ\n00:10,00"
+            android:background="@drawable/button_set_timer"
             android:lines="2"
             android:maxLines="2"
+            android:text="Mặt nạ\n00:10,00"
             android:textAllCaps="false"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
+            android:textColor="@color/white" />
 
         <!-- Thành phần hàng 1, cột 3 -->
         <Button
-            android:background="@drawable/button_set_timer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_row="0"
             android:layout_column="2"
-            android:textColor="@color/white"
-            android:text="Hấp trứng\n00:10,00"
+            android:background="@drawable/button_set_timer"
             android:lines="2"
             android:maxLines="2"
+            android:text="Hấp trứng\n00:10,00"
             android:textAllCaps="false"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
+            android:textColor="@color/white" />
 
         <!-- Thành phần hàng 2, cột 1 -->
         <Button
-            android:layout_marginTop="20dp"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_row="1"
             android:layout_column="0"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button_set_timer"
             android:lines="2"
             android:maxLines="2"
             android:text="+"
-            android:textSize="24sp"
             android:textAllCaps="false"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="24sp" />
 
     </GridLayout>
 
