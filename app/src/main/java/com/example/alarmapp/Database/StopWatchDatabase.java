@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.alarmapp.Base.StopWatch;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StopWatchDatabase extends SQLiteOpenHelper {

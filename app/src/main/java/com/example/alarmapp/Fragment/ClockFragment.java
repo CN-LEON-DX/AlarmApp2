@@ -2,11 +2,10 @@ package com.example.alarmapp.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -17,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.alarmapp.Activity.SelectClockActivity;
 import com.example.alarmapp.Adapter.Clock_Recycler_Adapter;
 import com.example.alarmapp.Base.Clock;
+
+import com.example.alarmapp.Database.WatchTimeCityDatabase;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -26,15 +27,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ClockFragment extends Fragment{
+    private static final long TIME_UPDATE_INTERVAL=1000*60;
+    private static final long TIME_UPDATE_TIME_DIFFERENCES=1000*60*60;
+    private static final long TIME_UPDATE_DAY=1000*60*60*24;
     private RecyclerView recyclerView_Clock;
     private List<Clock> clockList;
     private FloatingActionButton fabAdd_Clock;
     private TextView tvDate;
     private Clock_Recycler_Adapter clockRecyclerAdapter;
-
+    private WatchTimeCityDatabase database;
+    private Handler handlerInternal,handlerTimeDifferences,handlerDay;
     public ClockFragment() {
         // Required empty public constructor
     }
@@ -62,21 +66,28 @@ public class ClockFragment extends Fragment{
         recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
         fabAdd_Clock = view.findViewById(R.id.fabAddClock);
         tvDate =view.findViewById(R.id.tv_date);
-
-        //set Adapter
+        //initialization object
         clockList = new ArrayList<>();
+        database= new WatchTimeCityDatabase(getContext());
         clockRecyclerAdapter = new Clock_Recycler_Adapter(getContext(), clockList);
+        initRecyclerViewWhenStart();
+        //set Adapter
         recyclerView_Clock.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Clock.setAdapter(clockRecyclerAdapter);
         //set event
         setListenerForFabButton();
         //set text tvDate
         setDataForTvDate();
-        TextClock textClock = view.findViewById(R.id.textClock);
-        Log.i("Tag_Test",String.valueOf(textClock.getText()));
+
         return view;
     }
-
+    public void initRecyclerViewWhenStart(){
+        List<Clock> list = new ArrayList<>();
+        database.getData(list);
+        for(Clock clock : list){
+            clockRecyclerAdapter.addClock(clock);
+        }
+    }
     public void setListenerForFabButton(){
         fabAdd_Clock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,9 +104,10 @@ public class ClockFragment extends Fragment{
         if(requestCode==99&&resultCode==99&&data!=null){
             Clock clock = new Clock();
             clock.setCity(data.getStringExtra("city"));
-            clock.setTimeZone(data.getStringExtra("time"));
-            clock.setTimeDifferences(data.getStringExtra("gmt"));
+            clock.setTimeDifferences(data.getStringExtra("timeDifferences"));
+            clock.setTimeZone(data.getStringExtra("timeZone"));
             clockRecyclerAdapter.addClock(clock);
+            database.putData(clock);
         }
     }
     public void setDataForTvDate(){
@@ -103,5 +115,18 @@ public class ClockFragment extends Fragment{
         DateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
+    }
+    public void autoUpdateTime(){
+        handlerInternal.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        },TIME_UPDATE_INTERVAL);
+    }
+    public void updateTime(){
+        for(Clock clock : clockList){
+
+        }
     }
 }

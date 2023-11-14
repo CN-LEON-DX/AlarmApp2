@@ -42,7 +42,6 @@ public class Clock_Recycler_Adapter extends RecyclerView.Adapter<Clock_Recycler_
     public void addClock(Clock clock){
         clockList.add(clock);
         notifyItemInserted(getItemCount()-1);
-        notifyDataSetChanged();
     }
     class ClockViewHolder extends RecyclerView.ViewHolder {
         private TextView tvCity;
