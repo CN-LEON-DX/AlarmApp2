@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WatchTimeCityDatabase extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME="clockApp";
+    private static final String DATABASE_NAME="ClockDataBase";
     private static final String TABLE_NAME="tblTimeCity";
     private static final String COLUMN_ID="id";
     private static final String COLUMN_CITY="nameCity";

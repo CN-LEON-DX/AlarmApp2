@@ -7,4 +7,9 @@
     <string name="b_m_gi">Bấm giờ</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="t_n_th_nh_ph">Tên thành phố</string>
+    <string name="defaultStopWatchTime">00:00,00</string>
+    <string name="Mark">ghi</string>
+    <string name="reset">đặt lại</string>
+    <string name="stop">tạm dừng</string>
+    <string name="continueTextButton">tiếp tục</string>
 </resources>

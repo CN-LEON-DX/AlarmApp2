@@ -4,6 +4,7 @@
     android:id="@+id/tab_stopwatch"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="#000000"
     android:fontFamily="@font/lato_bold"
     android:text="Bấm giờ"
     android:textColor="@color/white"

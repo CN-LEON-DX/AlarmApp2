@@ -28,9 +28,9 @@ public class Main_AlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
-// Thêm tab vào TabLayout
+        // Thêm tab vào TabLayout
         // Đặt màu cho văn bản của các tab
-        tabLayout.setTabTextColors(ContextCompat.getColor(this, R.color.white), ContextCompat.getColor(this, R.color.white));
+        //tabLayout.setTabTextColors(ContextCompat.getColor(this, R.color.white), ContextCompat.getColor(this, R.color.white));
         // Khởi tạo biến adapter đẻ quản lý
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
         // Sau đó cần lâý id viewPager2 layout đã tạo bên giao diện
@@ -71,7 +71,7 @@ public class Main_AlarmActivity extends AppCompatActivity {
 //        tab4.setCustomView(R.layout.custome_tab_timer);
 //        tabLayout.addTab(tab4);
 
-// Đặt sự kiện lắng nghe khi chọn tab
+        // Đặt sự kiện lắng nghe khi chọn tab
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

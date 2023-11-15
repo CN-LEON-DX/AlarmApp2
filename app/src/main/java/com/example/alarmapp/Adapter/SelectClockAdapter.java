@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.TextClock;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,10 +39,10 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
         Clock clock = getItem(position);
         TextView tvGmt = listItemView.findViewById(R.id.tvGMT);
         TextView tvCity = listItemView.findViewById(R.id.tvCity);
-        TextView tvTime = listItemView.findViewById(R.id.tvTimeCurrent);
+        TextClock tvTime = listItemView.findViewById(R.id.tvTimeCurrent);
         tvGmt.setVisibility(View.INVISIBLE);
         tvCity.setText(clock.getCity());
-        tvTime.setText(clock.calculateTime(clock.getTimeZone()));
+        tvTime.setTimeZone(clock.getTimeZone());
         tvGmt.setText(clock.getTimeDifferences());
 
         return listItemView;

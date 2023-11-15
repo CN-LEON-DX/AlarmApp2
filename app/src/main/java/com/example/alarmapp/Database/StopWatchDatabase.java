@@ -8,17 +8,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.alarmapp.Base.StopWatch;
 import java.util.List;
 
 public class StopWatchDatabase extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME="clockApp";
+    private static final String DATABASE_NAME="stopWatchDataBase";
     private static final String TABLE_NAME="tblStopWatchTimeMark";
     private static final String COLUMN_ID_NAME ="id";
     private static final String COLUMN_TIME_ADD_NAME="timeAdd";
     private static final String COLUMN_TIME_RECORD_NAME="timeRecord";
     public StopWatchDatabase(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     }
 
     @SuppressLint("SQLiteString")
@@ -53,8 +55,7 @@ public class StopWatchDatabase extends SQLiteOpenHelper {
         }
         db.close();
     }
-    public void putData(StopWatch stopWatch){
-
+    public void putData(@NonNull StopWatch stopWatch){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_TIME_RECORD_NAME,stopWatch.getTimeRecord());

@@ -6,15 +6,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +22,7 @@ import com.example.alarmapp.Database.StopWatchDatabase;
 import com.example.alarmapp.R;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class StopWatchFragment extends Fragment {
     private StopWatchAdapter stopWatchAdapter;
@@ -49,6 +47,7 @@ public class StopWatchFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class StopWatchFragment extends Fragment {
         setListenerForBtnStartAndStop();
         setListenerForBtnResetAndMark();
         //read from shared Preferences
-        sharedPreferences=getContext().getSharedPreferences("sharedPrefs",Context.MODE_PRIVATE);
+        sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefsStopWatch",Context.MODE_PRIVATE);
         isFirstReadFromSharedPrefs=sharedPreferences.getBoolean("isFirstPut",true);
         if(!isFirstReadFromSharedPrefs) {
             isRunning=sharedPreferences.getBoolean("isRunning",false);
@@ -82,15 +81,15 @@ public class StopWatchFragment extends Fragment {
             elapsedTime=sharedPreferences.getLong("elapsedTime",0);
             elapsedTimeMark=sharedPreferences.getLong("elapsedTimeMark",0);
             updateUI();
-            Log.i("TAG_SIZE_LIST",String.valueOf(stopWatchList.size()));
         }
         else isFirstReadFromSharedPrefs=false;
         return view;
     }
+    @SuppressLint("UseRequireInsteadOfGet")
     @Override
     public void onStop() {
         super.onStop();
-        sharedPreferences= getContext().getSharedPreferences("sharedPrefs",Context.MODE_PRIVATE);
+        sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefs",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString("nextStatus",nextStatus);
         editor.putBoolean("isRunning",isRunning);
@@ -99,15 +98,15 @@ public class StopWatchFragment extends Fragment {
         editor.putBoolean("isFirstPut",isFirstReadFromSharedPrefs);
         editor.apply();
     }
-
+    //update when open fragment
     @SuppressLint("NotifyDataSetChanged")
     public void updateUI(){
         if (nextStatus.equals("start")){
             btnResetAndMark.setVisibility(View.GONE);
             btnStartAndStop.setText("Bắt đầu");
-        } else if(nextStatus.equals("continue")){//đang stop
+        } else if(nextStatus.equals("continue")){
             btnResetAndMark.setVisibility(View.VISIBLE);
-            btnStartAndStop.setText("tiếp tục");
+            btnStartAndStop.setText(R.string.continueTextButton);
             btnResetAndMark.setText("Đặt Lại");
             tvTimer.setText(calculateTime(elapsedTime));
             stopWatchDatabase.getData(stopWatchList);
@@ -118,11 +117,11 @@ public class StopWatchFragment extends Fragment {
                 tv_timeRecord.setText(calculateTime(elapsedTime));
                 tv_timeAdd.setText(calculateTime(elapsedTimeMark));
             }
-        } else if (nextStatus.equals("stop")) {//dang chạy
+        } else if (nextStatus.equals("stop")) {
             btnResetAndMark.setVisibility(View.VISIBLE);
-            btnStartAndStop.setText("Tạm dừng");
-            btnResetAndMark.setText("ghi");
-            if (handler!=null||runnable!=null){
+            btnStartAndStop.setText(R.string.stop);
+            btnResetAndMark.setText(R.string.Mark);
+            if (handler!=null&&runnable!=null){
                 handler.removeCallbacks(runnable);
             }
             stopWatchDatabase.getData(stopWatchList);
@@ -175,69 +174,61 @@ public class StopWatchFragment extends Fragment {
         handler.post(runnable);
     }
     public void setListenerForBtnStartAndStop() {
-        btnStartAndStop.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View v) {
-                if (nextStatus.equals("start")) {
-                    startTime();
-                    nextStatus = "stop";
-                    btnStartAndStop.setText("Tạm dừng");
-                    btnResetAndMark.setText("ghi");
-                    btnResetAndMark.setVisibility(View.VISIBLE);
-                    isRunning=true;
-                } else if (nextStatus.equals("stop")) {
-                    if(handler!=null||runnable!=null) handler.removeCallbacks(runnable);
-                    nextStatus = "continue";
-                    btnStartAndStop.setText("Tiếp tục");
-                    btnResetAndMark.setText("đặt lại");
-                    btnResetAndMark.setVisibility(View.VISIBLE);
-                } else if (nextStatus.equals("continue")) {
-                    isRunning = true;
-                    startTime();
-                    nextStatus = "stop";
-                    btnResetAndMark.setText("ghi");
-                    btnStartAndStop.setText("Tạm dừng");
-                    btnResetAndMark.setVisibility(View.VISIBLE);
-                }
+        btnStartAndStop.setOnClickListener(v -> {
+            if (nextStatus.equals("start")) {
+                startTime();
+                nextStatus = "stop";
+                btnStartAndStop.setText(R.string.stop);
+                btnResetAndMark.setText(R.string.Mark);
+                btnResetAndMark.setVisibility(View.VISIBLE);
+                isRunning=true;
+            } else if (nextStatus.equals("stop")) {
+                if(handler!=null&&runnable!=null) handler.removeCallbacks(runnable);
+                nextStatus = "continue";
+                btnStartAndStop.setText(R.string.continueTextButton);
+                btnResetAndMark.setText("đặt lại");
+                btnResetAndMark.setVisibility(View.VISIBLE);
+            } else if (nextStatus.equals("continue")) {
+                isRunning = true;
+                startTime();
+                nextStatus = "stop";
+                btnResetAndMark.setText(R.string.Mark);
+                btnStartAndStop.setText(R.string.stop);
+                btnResetAndMark.setVisibility(View.VISIBLE);
             }
         });
     }
     public void setListenerForBtnResetAndMark() {
-        btnResetAndMark.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View v) {
-                if (nextStatus.equals("stop")) {
-                    isRunning=true;
-                    layout.setVisibility(View.VISIBLE);
-                    tv_id.setText(String.valueOf(stopWatchList.size()+2));
-                    if(handler!=null&&runnable!=null)
-                        handler.removeCallbacks(runnable);
-                    startTime();
-                    StopWatch stopWatch = new StopWatch();
-                    stopWatch.setIndexOf(String.valueOf(stopWatchList.size() + 1));
-                    stopWatch.setTimeRecord(calculateTime(elapsedTime));
-                    stopWatch.setTimeAdd(calculateTime(elapsedTimeMark));
-                    stopWatchList.add(0,stopWatch);
-                    stopWatchDatabase.putData(stopWatch);
-                    stopWatchAdapter.notifyItemInserted(0);
-                } else if (nextStatus.equals("continue")) {
-                    isRunning = false;
-                    nextStatus = "start";
-                    elapsedTime=0;
-                    elapsedTimeMark=0;
-                    btnResetAndMark.setVisibility(View.GONE);
-                    stopWatchDatabase.clearData();
-                    if(handler!=null||runnable!=null)
-                        handler.removeCallbacks(runnable);
-                    tvTimer.setText("00:00,00");
-                    btnStartAndStop.setText("Bắt đầu");
-                    tv_timeRecord.setText("00:00,00");
-                    tv_timeAdd.setText("00:00,00");
-                    layout.setVisibility(View.GONE);
-                    if(!stopWatchList.isEmpty()) stopWatchList.clear();
-                }
+        btnResetAndMark.setOnClickListener(v -> {
+            if (nextStatus.equals("stop")) {
+                isRunning=true;
+                layout.setVisibility(View.VISIBLE);
+                tv_id.setText(String.valueOf(stopWatchList.size()+2));
+                if(handler!=null&&runnable!=null)
+                    handler.removeCallbacks(runnable);
+                startTime();
+                StopWatch stopWatch = new StopWatch();
+                stopWatch.setIndexOf(String.valueOf(stopWatchList.size() + 1));
+                stopWatch.setTimeRecord(calculateTime(elapsedTime));
+                stopWatch.setTimeAdd(calculateTime(elapsedTimeMark));
+                stopWatchList.add(0,stopWatch);
+                stopWatchDatabase.putData(stopWatch);
+                stopWatchAdapter.notifyItemInserted(0);
+            } else if (nextStatus.equals("continue")) {
+                isRunning = false;
+                nextStatus = "start";
+                elapsedTime=0;
+                elapsedTimeMark=0;
+                btnResetAndMark.setVisibility(View.GONE);
+                stopWatchDatabase.clearData();
+                if(handler!=null&&runnable!=null)
+                    handler.removeCallbacks(runnable);
+                tvTimer.setText(R.string.defaultStopWatchTime);
+                btnStartAndStop.setText("bắt đầu");
+                tv_timeRecord.setText(R.string.defaultStopWatchTime);
+                tv_timeAdd.setText(R.string.defaultStopWatchTime);
+                layout.setVisibility(View.GONE);
+                if(!stopWatchList.isEmpty()) stopWatchList.clear();
             }
         });
     }

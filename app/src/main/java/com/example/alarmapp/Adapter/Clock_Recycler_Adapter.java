@@ -3,6 +3,7 @@ package com.example.alarmapp.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,7 +54,7 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
 
     static class ClockViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvCity;
-        private final TextView tvTimeCurrent;
+        private final TextClock tvTimeCurrent;
         private final TextView tvGMT;
 
         public ClockViewHolder(@NonNull View itemView) {
@@ -65,7 +66,7 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
 
         public void setData(Clock clock) {
             if (clock.getTimeZone() != null && clock.getCity() != null && clock.getTimeDifferences() != null) {
-                tvTimeCurrent.setText(clock.getTimeZone());
+                tvTimeCurrent.setTimeZone(clock.getTimeZone());
                 tvCity.setText(clock.getCity());
                 tvGMT.setText(clock.getTimeDifferences());
             }

@@ -1,10 +1,9 @@
 package com.example.alarmapp.Fragment;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,16 +31,14 @@ import java.util.Date;
 import java.util.List;
 
 public class ClockFragment extends Fragment{
-    private static final long TIME_UPDATE_INTERVAL=1000;
-    private static final long TIME_UPDATE_TIME_DIFFERENCES=1000*60*60;
-    private static final long TIME_UPDATE_DAY=1000*60*60*24;
+
     private RecyclerView recyclerView_Clock;
     private List<Clock> clockList;
     private FloatingActionButton fabAdd_Clock;
     private TextView tvDate;
     private WatchTimeCityDatabase database;
     private Clock_Recycler_Adapter clockRecyclerAdapter;
-    private Handler handlerInternal,handlerTimeDifferences,handlerDay;
+    private SharedPreferences sharedPreferences;
     public ClockFragment() {
         // Required empty public constructor
     }
@@ -73,7 +70,6 @@ public class ClockFragment extends Fragment{
         clockList = new ArrayList<>();
         database= new WatchTimeCityDatabase(getContext());
         clockRecyclerAdapter = Clock_Recycler_Adapter.createInstance();
-        initRecyclerViewWhenStart();
         //set Adapter
         clockRecyclerAdapter.submitList(clockList);
         recyclerView_Clock.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -82,10 +78,17 @@ public class ClockFragment extends Fragment{
         setListenerForFabButton();
         //set text tvDate
         setDataForTvDate();
-        //auto update time
-        handlerInternal = new Handler();
-        autoUpdateTime();
+        //isFirstOpenFragment
+        if(isFirstOpenFragment()){
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.putBoolean("isFirstOpen",false);
+            editor.commit();
+        }else initRecyclerViewWhenStart();
         return view;
+    }
+    private boolean isFirstOpenFragment(){
+        sharedPreferences=getContext().getSharedPreferences("sharedPrefsClock", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isFirstOpen",true);
     }
     public void initRecyclerViewWhenStart(){
         List<Clock> list = new ArrayList<>();
@@ -97,7 +100,7 @@ public class ClockFragment extends Fragment{
             Clock clockAdapter = new Clock();
             clockAdapter.setCity(city);
             clockAdapter.setTimeDifferences(clockAdapter.getFormattedTime(Integer.parseInt(timeDifferences)));
-            clockAdapter.setTimeZone(clockAdapter.calculateTime(timeZone));
+            clockAdapter.setTimeZone(timeZone);
             clockList.add(clockAdapter);
             clockRecyclerAdapter.notifyItemInserted(clockList.size());
 
@@ -129,7 +132,7 @@ public class ClockFragment extends Fragment{
                 database.putData(new Clock(city,timeDifferences,timeZone));
                 clock.setCity(city);
                 clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
-                clock.setTimeZone(clock.calculateTime(timeZone));
+                clock.setTimeZone(timeZone);
                 clockList.add(clock);
                 clockRecyclerAdapter.notifyItemInserted(clockList.size());
             }else Toast.makeText(getContext(),"bạn đã chọn thành phố này",Toast.LENGTH_LONG).show();
@@ -141,22 +144,5 @@ public class ClockFragment extends Fragment{
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
     }
-    public void autoUpdateTime(){
-        handlerInternal.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateTime();
-                handlerInternal.postDelayed(this,TIME_UPDATE_INTERVAL);
-            }
-        },TIME_UPDATE_INTERVAL);
-    }
-    @SuppressLint("NotifyDataSetChanged")
-    public void updateTime(){
-        for(Clock clock : clockList){
-            Clock newClock=database.selectData(clock.getCity());
-            String newtTime= newClock.calculateTime(newClock.getTimeZone());
-            clock.setTimeZone(newtTime);
-            clockRecyclerAdapter.notifyDataSetChanged();
-        }
-    }
+
 }
