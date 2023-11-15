@@ -1,63 +1,60 @@
 package com.example.alarmapp.Adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alarmapp.Base.Clock;
 import com.example.alarmapp.R;
 
-import java.util.List;
+public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Adapter.ClockViewHolder> {
 
-public class Clock_Recycler_Adapter extends RecyclerView.Adapter<Clock_Recycler_Adapter.ClockViewHolder> {
-    private List<Clock> clockList;
-    private Context context;
+    protected Clock_Recycler_Adapter() {
+        super(new DiffUtil.ItemCallback<Clock>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull Clock oldItem, @NonNull Clock newItem) {
+                String timeOld = oldItem.calculateTime(oldItem.getTimeZone());
+                String timeNew = newItem.calculateTime(newItem.getTimeZone());
+                String timeDifferencesOld= oldItem.getFormattedTime(Integer.parseInt(oldItem.getTimeDifferences()));
+                String timeDifferencesNew= oldItem.getFormattedTime(Integer.parseInt(newItem.getTimeDifferences()));
+                return timeNew.equals(timeOld)||timeDifferencesOld.equals(timeDifferencesNew);
+            }
 
-    public Clock_Recycler_Adapter(Context context, List<Clock> clockList) {
-        this.context = context;
-        this.clockList = clockList;
+            @Override
+            public boolean areContentsTheSame(@NonNull Clock oldItem, @NonNull Clock newItem) {
+                String timeOld = oldItem.calculateTime(oldItem.getTimeZone());
+                String timeNew = newItem.calculateTime(newItem.getTimeZone());
+                String timeDifferencesOld= oldItem.getFormattedTime(Integer.parseInt(oldItem.getTimeDifferences()));
+                String timeDifferencesNew= oldItem.getFormattedTime(Integer.parseInt(newItem.getTimeDifferences()));
+                return timeNew.equals(timeOld)||timeDifferencesOld.equals(timeDifferencesNew);
+            }
+        });
     }
-
+    public static Clock_Recycler_Adapter createInstance(){
+        return  new Clock_Recycler_Adapter();
+    }
     @NonNull
     @Override
     public ClockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_clock_recycler, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_clock_recycler, parent, false);
         return new ClockViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ClockViewHolder holder, int position) {
-        holder.setData(clockList.get(position));
+        holder.setData(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return clockList.isEmpty() ? 0 : clockList.size();
-    }
-    public void addClock(Clock clock){
-        clockList.add(clock);
-        notifyItemInserted(getItemCount()-1);
-    }
-    public void updateTime(Clock clock) {
-        String timeZone = clock.getTimeZone();
-        for (int i = 0; i < clockList.size(); i++) {
-            Clock clockFromAdapter = clockList.get(i);
-            if (clockFromAdapter.getCity().equals(clock.getCity())) {
-                clockFromAdapter.setTimeZone(clockFromAdapter.calculateTime(timeZone));
-                notifyItemChanged(i);
-                break;
-            }
-        }
-    }
-    class ClockViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvCity;
-        private TextView tvTimeCurrent;
-        private TextView tvGMT;
+    static class ClockViewHolder extends RecyclerView.ViewHolder {
+        private final TextView tvCity;
+        private final TextView tvTimeCurrent;
+        private final TextView tvGMT;
 
         public ClockViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,8 +62,9 @@ public class Clock_Recycler_Adapter extends RecyclerView.Adapter<Clock_Recycler_
             tvCity = itemView.findViewById(R.id.tvCity);
             tvGMT = itemView.findViewById(R.id.tvGMT);
         }
+
         public void setData(Clock clock) {
-            if (clock.getTimeZone() != null && clock.getCity()!= null&&clock.getTimeDifferences()!=null){
+            if (clock.getTimeZone() != null && clock.getCity() != null && clock.getTimeDifferences() != null) {
                 tvTimeCurrent.setText(clock.getTimeZone());
                 tvCity.setText(clock.getCity());
                 tvGMT.setText(clock.getTimeDifferences());
