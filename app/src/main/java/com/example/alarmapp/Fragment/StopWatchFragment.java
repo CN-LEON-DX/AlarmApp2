@@ -89,7 +89,7 @@ public class StopWatchFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefs",Context.MODE_PRIVATE);
+        sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefsStopWatch",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString("nextStatus",nextStatus);
         editor.putBoolean("isRunning",isRunning);

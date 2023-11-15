@@ -1,5 +1,6 @@
 package com.example.alarmapp.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +21,7 @@ import com.example.alarmapp.Activity.SelectClockActivity;
 import com.example.alarmapp.Adapter.Clock_Recycler_Adapter;
 import com.example.alarmapp.Base.Clock;
 
+import com.example.alarmapp.Base.SwipeToDeleteCallbackClock;
 import com.example.alarmapp.Database.WatchTimeCityDatabase;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,7 +41,6 @@ public class ClockFragment extends Fragment{
     private TextView tvDate;
     private WatchTimeCityDatabase database;
     private Clock_Recycler_Adapter clockRecyclerAdapter;
-    private SharedPreferences sharedPreferences;
     public ClockFragment() {
         // Required empty public constructor
     }
@@ -76,20 +78,16 @@ public class ClockFragment extends Fragment{
         recyclerView_Clock.setAdapter(clockRecyclerAdapter);
         //set event
         setListenerForFabButton();
+
+        // Tạo và thiết lập ItemTouchHelper
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackClock( clockRecyclerAdapter,database,this));
+        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         //set text tvDate
         setDataForTvDate();
-        //isFirstOpenFragment
-        if(isFirstOpenFragment()){
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putBoolean("isFirstOpen",false);
-            editor.commit();
-        }else initRecyclerViewWhenStart();
+        initRecyclerViewWhenStart();
         return view;
     }
-    private boolean isFirstOpenFragment(){
-        sharedPreferences=getContext().getSharedPreferences("sharedPrefsClock", Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean("isFirstOpen",true);
-    }
+
     public void initRecyclerViewWhenStart(){
         List<Clock> list = new ArrayList<>();
         database.getData(list);
@@ -140,7 +138,7 @@ public class ClockFragment extends Fragment{
     }
     public void setDataForTvDate(){
         Date currentDate = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
     }

@@ -12,4 +12,7 @@
     <string name="reset">đặt lại</string>
     <string name="stop">tạm dừng</string>
     <string name="continueTextButton">tiếp tục</string>
+    <string name="messageDeleteItem">Bạn có chắc chắn muốn xóa không</string>
+    <string name="titleAlertDialog">thông báo</string>
+    <string name="formatDate">EEEE, dd/MM/yyyy</string>
 </resources>
