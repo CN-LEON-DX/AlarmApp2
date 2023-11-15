@@ -91,8 +91,8 @@ public class SelectClockActivity extends AppCompatActivity {
     public void addCity(String nameCity,int timeDifferences,String timeZone){
         Clock clock = new Clock();
         clock.setCity(nameCity);
-        clock.setTimeDifferences(clock.getFormattedTime(timeDifferences));
-        clock.setTimeZone(clock.calculateTime(timeZone));
+        clock.setTimeDifferences(String.valueOf(timeDifferences));
+        clock.setTimeZone(timeZone);
         listClock.add(clock);
     }
     public void setListenerForBack(){

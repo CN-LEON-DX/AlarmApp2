@@ -43,6 +43,17 @@ public class Clock_Recycler_Adapter extends RecyclerView.Adapter<Clock_Recycler_
         clockList.add(clock);
         notifyItemInserted(getItemCount()-1);
     }
+    public void updateTime(Clock clock) {
+        String timeZone = clock.getTimeZone();
+        for (int i = 0; i < clockList.size(); i++) {
+            Clock clockFromAdapter = clockList.get(i);
+            if (clockFromAdapter.getCity().equals(clock.getCity())) {
+                clockFromAdapter.setTimeZone(clockFromAdapter.calculateTime(timeZone));
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
     class ClockViewHolder extends RecyclerView.ViewHolder {
         private TextView tvCity;
         private TextView tvTimeCurrent;

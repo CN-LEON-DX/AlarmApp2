@@ -3,10 +3,12 @@ package com.example.alarmapp.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ClockFragment extends Fragment{
-    private static final long TIME_UPDATE_INTERVAL=1000*60;
+    private static final long TIME_UPDATE_INTERVAL=1000*30;
     private static final long TIME_UPDATE_TIME_DIFFERENCES=1000*60*60;
     private static final long TIME_UPDATE_DAY=1000*60*60*24;
     private RecyclerView recyclerView_Clock;
@@ -78,14 +80,23 @@ public class ClockFragment extends Fragment{
         setListenerForFabButton();
         //set text tvDate
         setDataForTvDate();
-
+        //auto update time
+        handlerInternal = new Handler();
+        autoUpdateTime();
         return view;
     }
     public void initRecyclerViewWhenStart(){
         List<Clock> list = new ArrayList<>();
         database.getData(list);
         for(Clock clock : list){
-            clockRecyclerAdapter.addClock(clock);
+            String city = clock.getCity();
+            String timeDifferences=clock.getTimeDifferences();
+            String timeZone= clock.getTimeZone();
+            Clock clockAdapter = new Clock();
+            clockAdapter.setCity(city);
+            clockAdapter.setTimeDifferences(clockAdapter.getFormattedTime(Integer.parseInt(timeDifferences)));
+            clockAdapter.setTimeZone(clockAdapter.calculateTime(timeZone));
+            clockRecyclerAdapter.addClock(clockAdapter);
         }
     }
     public void setListenerForFabButton(){
@@ -103,11 +114,20 @@ public class ClockFragment extends Fragment{
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==99&&resultCode==99&&data!=null){
             Clock clock = new Clock();
-            clock.setCity(data.getStringExtra("city"));
-            clock.setTimeDifferences(data.getStringExtra("timeDifferences"));
-            clock.setTimeZone(data.getStringExtra("timeZone"));
-            clockRecyclerAdapter.addClock(clock);
-            database.putData(clock);
+            String city=data.getStringExtra("city");
+            String timeDifferences=data.getStringExtra("timeDifferences");
+            String timeZone = data.getStringExtra("timeZone");
+            boolean isSelected =false;
+            for(Clock clockFromList : clockList){
+                if(clockFromList.getCity().equals(city)) isSelected = true;
+            }
+            if(!isSelected){
+                database.putData(new Clock(city,timeDifferences,timeZone));
+                clock.setCity(city);
+                clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
+                clock.setTimeZone(clock.calculateTime(timeZone));
+                clockRecyclerAdapter.addClock(clock);
+            }else Toast.makeText(getContext(),"bạn đã chọn thành phố này",Toast.LENGTH_LONG).show();
         }
     }
     public void setDataForTvDate(){
@@ -120,13 +140,14 @@ public class ClockFragment extends Fragment{
         handlerInternal.postDelayed(new Runnable() {
             @Override
             public void run() {
-
+                updateTime();
+                handlerInternal.postDelayed(this,TIME_UPDATE_INTERVAL);
             }
         },TIME_UPDATE_INTERVAL);
     }
     public void updateTime(){
         for(Clock clock : clockList){
-
+            clockRecyclerAdapter.updateTime(clock);
         }
     }
 }
