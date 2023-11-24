@@ -1,13 +1,13 @@
 package com.example.alarmapp.Fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +21,7 @@ import com.example.alarmapp.Activity.SelectClockActivity;
 import com.example.alarmapp.Adapter.Clock_Recycler_Adapter;
 import com.example.alarmapp.Base.Clock;
 
-import com.example.alarmapp.Base.SwipeToDeleteCallbackClock;
+import com.example.alarmapp.Base.SwipeToDeleteClock;
 import com.example.alarmapp.Database.WatchTimeCityDatabase;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,7 +35,6 @@ import java.util.List;
 
 public class ClockFragment extends Fragment{
 
-    private RecyclerView recyclerView_Clock;
     private List<Clock> clockList;
     private FloatingActionButton fabAdd_Clock;
     private TextView tvDate;
@@ -65,7 +64,7 @@ public class ClockFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
         //find id
-        recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
+        RecyclerView recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
         fabAdd_Clock = view.findViewById(R.id.fabAddClock);
         tvDate =view.findViewById(R.id.tv_date);
         //initialization object
@@ -78,9 +77,8 @@ public class ClockFragment extends Fragment{
         recyclerView_Clock.setAdapter(clockRecyclerAdapter);
         //set event
         setListenerForFabButton();
-
         // Tạo và thiết lập ItemTouchHelper
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackClock( clockRecyclerAdapter,database,this));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteClock( clockRecyclerAdapter,database,this));
         itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         //set text tvDate
         setDataForTvDate();
@@ -142,5 +140,7 @@ public class ClockFragment extends Fragment{
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
     }
+    private void setAutoUpdateTime(){
 
+    }
 }

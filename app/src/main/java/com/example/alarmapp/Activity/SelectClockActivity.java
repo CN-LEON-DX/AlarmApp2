@@ -96,12 +96,7 @@ public class SelectClockActivity extends AppCompatActivity {
         listClock.add(clock);
     }
     public void setListenerForBack(){
-        layoutBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        layoutBack.setOnClickListener(v -> finish());
     }
     public void setListenerForSearchView(){
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -118,20 +113,17 @@ public class SelectClockActivity extends AppCompatActivity {
         });
     }
     public void setListenerForListView(){
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Clock selectClock = (Clock) listView.getItemAtPosition(position);
-                Intent intentResult = new Intent();
-                String city = selectClock.getCity();
-                for(Clock clock:listClock){
-                    if(clock.getCity().equals(city)){
-                        intentResult.putExtra("city",clock.getCity());
-                        intentResult.putExtra("timeDifferences",clock.getTimeDifferences());
-                        intentResult.putExtra("timeZone",clock.getTimeZone());
-                        setResult(99,intentResult);
-                        finish();
-                    }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Clock selectClock = (Clock) listView.getItemAtPosition(position);
+            Intent intentResult = new Intent();
+            String city = selectClock.getCity();
+            for(Clock clock:listClock){
+                if(clock.getCity().equals(city)){
+                    intentResult.putExtra("city",clock.getCity());
+                    intentResult.putExtra("timeDifferences",clock.getTimeDifferences());
+                    intentResult.putExtra("timeZone",clock.getTimeZone());
+                    setResult(99,intentResult);
+                    finish();
                 }
             }
         });

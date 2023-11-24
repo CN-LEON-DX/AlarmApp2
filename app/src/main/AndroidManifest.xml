@@ -36,7 +36,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Broadcast.Broadcast_Alarm_Receiver" />
+        <receiver android:name=".Broadcast.Broadcast_Alarm_Receiver"
+            android:exported="true">
+         
+        </receiver>
     </application>
 
 </manifest>

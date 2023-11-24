@@ -39,10 +39,10 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
         Clock clock = getItem(position);
         TextView tvGmt = listItemView.findViewById(R.id.tvGMT);
         TextView tvCity = listItemView.findViewById(R.id.tvCity);
-        TextClock tvTime = listItemView.findViewById(R.id.tvTimeCurrent);
+        TextView tvTime = listItemView.findViewById(R.id.tvTimeCurrent);
         tvGmt.setVisibility(View.INVISIBLE);
         tvCity.setText(clock.getCity());
-        tvTime.setTimeZone(clock.getTimeZone());
+        tvTime.setText(clock.calculateTime(clock.getTimeZone()));
         tvGmt.setText(clock.getTimeDifferences());
 
         return listItemView;

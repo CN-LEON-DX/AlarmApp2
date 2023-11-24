@@ -1,10 +1,8 @@
 package com.example.alarmapp.Base;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +14,11 @@ import com.example.alarmapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwipeToDeleteCallbackClock extends ItemTouchHelper.SimpleCallback {
+public class SwipeToDeleteClock extends ItemTouchHelper.SimpleCallback {
     private Clock_Recycler_Adapter adapter;
     private Fragment fragment;
     private WatchTimeCityDatabase database;
-    public SwipeToDeleteCallbackClock(Clock_Recycler_Adapter clockRecyclerAdapter,WatchTimeCityDatabase database,Fragment fragment){
+    public SwipeToDeleteClock(Clock_Recycler_Adapter clockRecyclerAdapter, WatchTimeCityDatabase database, Fragment fragment){
         super(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
         this.adapter=clockRecyclerAdapter;
         this.fragment=fragment;

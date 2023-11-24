@@ -39,6 +39,7 @@ public class StopWatchFragment extends Fragment {
     private TextView tv_id,tv_timeRecord,tv_timeAdd;
     private SharedPreferences sharedPreferences;
     private StopWatchDatabase stopWatchDatabase;
+    private long startTime,startTimeMark;
     public StopWatchFragment() {
         // Required empty public constructor
     }
@@ -147,13 +148,14 @@ public class StopWatchFragment extends Fragment {
     }
     public void startTime() {
         handler = new Handler();
-        long startTime;
         if (isRunning) {
             startTime = System.currentTimeMillis() - elapsedTime;
         } else {
             startTime = System.currentTimeMillis();
         }
-        long startTimeMark = System.currentTimeMillis();
+        startTimeMark = System.currentTimeMillis();
+        if(nextStatus.equals("continue"))
+            startTimeMark=System.currentTimeMillis()-elapsedTimeMark;
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -200,12 +202,13 @@ public class StopWatchFragment extends Fragment {
     }
     public void setListenerForBtnResetAndMark() {
         btnResetAndMark.setOnClickListener(v -> {
-            if (nextStatus.equals("stop")) {
+            if (nextStatus.equals("stop")) {//event mark
                 isRunning=true;
                 layout.setVisibility(View.VISIBLE);
                 tv_id.setText(String.valueOf(stopWatchList.size()+2));
                 if(handler!=null&&runnable!=null)
                     handler.removeCallbacks(runnable);
+
                 startTime();
                 StopWatch stopWatch = new StopWatch();
                 stopWatch.setIndexOf(String.valueOf(stopWatchList.size() + 1));
