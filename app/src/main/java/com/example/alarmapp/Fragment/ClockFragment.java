@@ -129,8 +129,8 @@ public class ClockFragment extends Fragment{
                 clock.setCity(city);
                 clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
                 clock.setTimeZone(timeZone);
-                clockList.add(clock);
-                clockRecyclerAdapter.notifyItemInserted(clockList.size());
+                clockList.add(0,clock);
+                clockRecyclerAdapter.notifyItemInserted(0);
             }else Toast.makeText(getContext(),"bạn đã chọn thành phố này",Toast.LENGTH_LONG).show();
         }
     }
