@@ -74,18 +74,10 @@ public class StopWatchFragment extends Fragment {
         setListenerForBtnStartAndStop();
         setListenerForBtnResetAndMark();
         //read from shared Preferences
-        sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefsStopWatch",Context.MODE_PRIVATE);
-        isFirstReadFromSharedPrefs=sharedPreferences.getBoolean("isFirstPut",true);
-        if(!isFirstReadFromSharedPrefs) {
-            isRunning=sharedPreferences.getBoolean("isRunning",false);
-            nextStatus=sharedPreferences.getString("nextStatus","test");
-            elapsedTime=sharedPreferences.getLong("elapsedTime",0);
-            elapsedTimeMark=sharedPreferences.getLong("elapsedTimeMark",0);
-            updateUI();
-        }
-        else isFirstReadFromSharedPrefs=false;
+        readDataFromSharedPreferences();
         return view;
     }
+    //write data to sharedPreferences when fragment stop
     @SuppressLint("UseRequireInsteadOfGet")
     @Override
     public void onStop() {
@@ -99,39 +91,57 @@ public class StopWatchFragment extends Fragment {
         editor.putBoolean("isFirstPut",isFirstReadFromSharedPrefs);
         editor.apply();
     }
+    //read Data from SharedPreferences when fragment create and update UI
+    @SuppressLint("UseRequireInsteadOfGet")
+    private void readDataFromSharedPreferences(){
+        sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefsStopWatch",Context.MODE_PRIVATE);
+        isFirstReadFromSharedPrefs=sharedPreferences.getBoolean("isFirstPut",true);
+        if(!isFirstReadFromSharedPrefs) {
+            isRunning=sharedPreferences.getBoolean("isRunning",false);
+            nextStatus=sharedPreferences.getString("nextStatus","test");
+            elapsedTime=sharedPreferences.getLong("elapsedTime",0);
+            elapsedTimeMark=sharedPreferences.getLong("elapsedTimeMark",0);
+            updateUI();
+        }
+        else isFirstReadFromSharedPrefs=false;
+    }
     //update when open fragment
     @SuppressLint("NotifyDataSetChanged")
     public void updateUI(){
-        if (nextStatus.equals("start")){
-            btnResetAndMark.setVisibility(View.GONE);
-            btnStartAndStop.setText("Bắt đầu");
-        } else if(nextStatus.equals("continue")){
-            btnResetAndMark.setVisibility(View.VISIBLE);
-            btnStartAndStop.setText(R.string.continueTextButton);
-            btnResetAndMark.setText("Đặt Lại");
-            tvTimer.setText(calculateTime(elapsedTime));
-            stopWatchDatabase.getData(stopWatchList);
-            if(stopWatchList.size()!=0) {
-                stopWatchAdapter.notifyDataSetChanged();
-                layout.setVisibility(View.VISIBLE);
-                tv_id.setText(String.valueOf(stopWatchList.size()+1));
-                tv_timeRecord.setText(calculateTime(elapsedTime));
-                tv_timeAdd.setText(calculateTime(elapsedTimeMark));
-            }
-        } else if (nextStatus.equals("stop")) {
-            btnResetAndMark.setVisibility(View.VISIBLE);
-            btnStartAndStop.setText(R.string.stop);
-            btnResetAndMark.setText(R.string.Mark);
-            if (handler!=null&&runnable!=null){
-                handler.removeCallbacks(runnable);
-            }
-            stopWatchDatabase.getData(stopWatchList);
-            if(stopWatchList.size()!=0){
-                stopWatchAdapter.notifyDataSetChanged();
-                layout.setVisibility(View.VISIBLE);
-                tv_id.setText(String.valueOf(stopWatchList.size()+1));
-            }
-            startTime();
+        switch (nextStatus) {
+            case "start":
+                btnResetAndMark.setVisibility(View.GONE);
+                btnStartAndStop.setText("Bắt đầu");
+                break;
+            case "continue":
+                btnResetAndMark.setVisibility(View.VISIBLE);
+                btnStartAndStop.setText(R.string.continueTextButton);
+                btnResetAndMark.setText("Đặt Lại");
+                tvTimer.setText(calculateTime(elapsedTime));
+                stopWatchDatabase.getData(stopWatchList);
+                if (stopWatchList.size() != 0) {
+                    stopWatchAdapter.notifyDataSetChanged();
+                    layout.setVisibility(View.VISIBLE);
+                    tv_id.setText(String.valueOf(stopWatchList.size() + 1));
+                    tv_timeRecord.setText(calculateTime(elapsedTime));
+                    tv_timeAdd.setText(calculateTime(elapsedTimeMark));
+                }
+                break;
+            case "stop":
+                btnResetAndMark.setVisibility(View.VISIBLE);
+                btnStartAndStop.setText(R.string.stop);
+                btnResetAndMark.setText(R.string.Mark);
+                if (handler != null && runnable != null) {
+                    handler.removeCallbacks(runnable);
+                }
+                stopWatchDatabase.getData(stopWatchList);
+                if (stopWatchList.size() != 0) {
+                    stopWatchAdapter.notifyDataSetChanged();
+                    layout.setVisibility(View.VISIBLE);
+                    tv_id.setText(String.valueOf(stopWatchList.size() + 1));
+                }
+                startTime();
+                break;
         }
     }
     @SuppressLint("DefaultLocale")
@@ -177,62 +187,81 @@ public class StopWatchFragment extends Fragment {
     }
     public void setListenerForBtnStartAndStop() {
         btnStartAndStop.setOnClickListener(v -> {
-            if (nextStatus.equals("start")) {
-                startTime();
-                nextStatus = "stop";
-                btnStartAndStop.setText(R.string.stop);
-                btnResetAndMark.setText(R.string.Mark);
-                btnResetAndMark.setVisibility(View.VISIBLE);
-                isRunning=true;
-            } else if (nextStatus.equals("stop")) {
-                if(handler!=null&&runnable!=null) handler.removeCallbacks(runnable);
-                nextStatus = "continue";
-                btnStartAndStop.setText(R.string.continueTextButton);
-                btnResetAndMark.setText("đặt lại");
-                btnResetAndMark.setVisibility(View.VISIBLE);
-            } else if (nextStatus.equals("continue")) {
-                isRunning = true;
-                startTime();
-                nextStatus = "stop";
-                btnResetAndMark.setText(R.string.Mark);
-                btnStartAndStop.setText(R.string.stop);
-                btnResetAndMark.setVisibility(View.VISIBLE);
+            switch (nextStatus) {
+                case "start":
+                    eventForStart();
+                    break;
+                case "stop":
+                    eventForStop();
+                    break;
+                case "continue":
+                    eventForContinue();
+                    break;
             }
         });
     }
     public void setListenerForBtnResetAndMark() {
         btnResetAndMark.setOnClickListener(v -> {
             if (nextStatus.equals("stop")) {//event mark
-                isRunning=true;
-                layout.setVisibility(View.VISIBLE);
-                tv_id.setText(String.valueOf(stopWatchList.size()+2));
-                if(handler!=null&&runnable!=null)
-                    handler.removeCallbacks(runnable);
-
-                startTime();
-                StopWatch stopWatch = new StopWatch();
-                stopWatch.setIndexOf(String.valueOf(stopWatchList.size() + 1));
-                stopWatch.setTimeRecord(calculateTime(elapsedTime));
-                stopWatch.setTimeAdd(calculateTime(elapsedTimeMark));
-                stopWatchList.add(0,stopWatch);
-                stopWatchDatabase.putData(stopWatch);
-                stopWatchAdapter.notifyItemInserted(0);
+                eventForMark();
             } else if (nextStatus.equals("continue")) {
-                isRunning = false;
-                nextStatus = "start";
-                elapsedTime=0;
-                elapsedTimeMark=0;
-                btnResetAndMark.setVisibility(View.GONE);
-                stopWatchDatabase.clearData();
-                if(handler!=null&&runnable!=null)
-                    handler.removeCallbacks(runnable);
-                tvTimer.setText(R.string.defaultStopWatchTime);
-                btnStartAndStop.setText("bắt đầu");
-                tv_timeRecord.setText(R.string.defaultStopWatchTime);
-                tv_timeAdd.setText(R.string.defaultStopWatchTime);
-                layout.setVisibility(View.GONE);
-                if(!stopWatchList.isEmpty()) stopWatchList.clear();
+               eventForReset();
             }
         });
+    }
+    private void eventForStart(){
+        startTime();
+        nextStatus = "stop";
+        btnStartAndStop.setText(R.string.stop);
+        btnResetAndMark.setText(R.string.Mark);
+        btnResetAndMark.setVisibility(View.VISIBLE);
+        isRunning=true;
+    }
+    private void eventForStop(){
+        if(handler!=null&&runnable!=null) handler.removeCallbacks(runnable);
+        nextStatus = "continue";
+        btnStartAndStop.setText(R.string.continueTextButton);
+        btnResetAndMark.setText("đặt lại");
+        btnResetAndMark.setVisibility(View.VISIBLE);
+    }
+    private void eventForContinue(){
+        isRunning = true;
+        startTime();
+        nextStatus = "stop";
+        btnResetAndMark.setText(R.string.Mark);
+        btnStartAndStop.setText(R.string.stop);
+        btnResetAndMark.setVisibility(View.VISIBLE);
+    }
+    private void eventForMark(){
+        isRunning=true;
+        layout.setVisibility(View.VISIBLE);
+        tv_id.setText(String.valueOf(stopWatchList.size()+2));
+        if(handler!=null&&runnable!=null)
+            handler.removeCallbacks(runnable);
+
+        startTime();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.setIndexOf(String.valueOf(stopWatchList.size() + 1));
+        stopWatch.setTimeRecord(calculateTime(elapsedTime));
+        stopWatch.setTimeAdd(calculateTime(elapsedTimeMark));
+        stopWatchList.add(0,stopWatch);
+        stopWatchDatabase.putData(stopWatch);
+        stopWatchAdapter.notifyItemInserted(0);
+    }
+    private void eventForReset(){
+        isRunning = false;
+        nextStatus = "start";
+        elapsedTime=0;
+        elapsedTimeMark=0;
+        btnResetAndMark.setVisibility(View.GONE);
+        stopWatchDatabase.clearData();
+        if(handler!=null&&runnable!=null)
+            handler.removeCallbacks(runnable);
+        tvTimer.setText(R.string.defaultStopWatchTime);
+        btnStartAndStop.setText("bắt đầu");
+        tv_timeRecord.setText(R.string.defaultStopWatchTime);
+        tv_timeAdd.setText(R.string.defaultStopWatchTime);
+        layout.setVisibility(View.GONE);
+        if(!stopWatchList.isEmpty()) stopWatchList.clear();
     }
 }
