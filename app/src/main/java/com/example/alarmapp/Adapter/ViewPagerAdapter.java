@@ -8,7 +8,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.alarmapp.Fragment.AlarmFragment;
 import com.example.alarmapp.Fragment.ClockFragment;
 import com.example.alarmapp.Fragment.StopWatchFragment;
-import com.example.alarmapp.Fragment.TimerFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
@@ -29,8 +28,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                 return new ClockFragment();
             case 2:
                 return new StopWatchFragment();
-            case 3:
-                return new TimerFragment();
             default:
                 return null;
         }
@@ -38,6 +35,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 3;
     }
 }

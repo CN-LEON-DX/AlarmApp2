@@ -12,5 +12,6 @@
 
     <color name="turn_on_color_alarm">#2C97EC</color>
     <color name="turn_off_color_alarm">#777474</color>
-
+    <color name="thumbTintSwitch" >#ADAEAF</color>
+    <color name="trackTintSwitch">#2C97EC</color>
 </resources>

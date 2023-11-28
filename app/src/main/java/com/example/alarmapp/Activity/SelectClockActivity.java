@@ -26,7 +26,7 @@ public class SelectClockActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_clock);
         //find id
-        layoutBack=findViewById(R.id.layout_back);
+        layoutBack=findViewById(R.id.layout_back_alarm);
         searchView=findViewById(R.id.search);
         listView = findViewById(R.id.lv_selectClock);
         //initialization object

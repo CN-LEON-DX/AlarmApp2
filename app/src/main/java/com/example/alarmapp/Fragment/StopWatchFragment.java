@@ -4,8 +4,10 @@ package com.example.alarmapp.Fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import com.example.alarmapp.Adapter.StopWatchAdapter;
 import com.example.alarmapp.Base.StopWatch;
 import com.example.alarmapp.Database.StopWatchDatabase;
 import com.example.alarmapp.R;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -63,7 +67,7 @@ public class StopWatchFragment extends Fragment {
         tv_timeRecord=view.findViewById(R.id.tv_timeRecordFragment);
         tv_timeAdd=view.findViewById(R.id.tv_timeAddedFragment);
         RecyclerView rcvStopWatch = view.findViewById(R.id.rcvListStopWatch);
-        //initialization object
+        //initialize object
         stopWatchDatabase = new StopWatchDatabase(getContext());
         stopWatchList = new ArrayList<>();
         stopWatchAdapter = new StopWatchAdapter(stopWatchList, getContext());
@@ -263,5 +267,21 @@ public class StopWatchFragment extends Fragment {
         tv_timeAdd.setText(R.string.defaultStopWatchTime);
         layout.setVisibility(View.GONE);
         if(!stopWatchList.isEmpty()) stopWatchList.clear();
+    }
+    //cách phát âm thanh
+    private  void  playSound(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(),R.raw.sound_chicken);
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.setLooping(true); // Lặp lại âm thanh
+            mediaPlayer.start();//bắt đầu phát
+        }else{
+            mediaPlayer.stop();
+            try {
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                Log.e("Lỗi phát âm thanh",e.getMessage());
+            }
+            ;//
+        }
     }
 }

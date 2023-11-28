@@ -1,5 +1,6 @@
 package com.example.alarmapp.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
+import com.example.alarmapp.Activity.CreateNewAlarmActivity;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
 import com.example.alarmapp.Base.Alarm;
 import com.example.alarmapp.R;
@@ -23,6 +26,7 @@ public class AlarmFragment extends Fragment {
     private RecyclerView recyclerView_Alarm;
     private List<Alarm> alarmList;
     private Alarm_Recycler_Adapter adapter_Alarm;
+    private ScrollView scrollHour,scrollMinute;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -40,18 +44,18 @@ public class AlarmFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
 
-        // Tìm các phần tử trong View
+        // find id
         recyclerView_Alarm = view.findViewById(R.id.rcvList_Alarm);
         fabAdd_Alarm = view.findViewById(R.id.fabAddAlarm);
-
-
-
-
+        scrollHour=view.findViewById(R.id.scroll_hour);
         // Tạo và cấu hình RecyclerView
         adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), createAlarmList());
         recyclerView_Alarm.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Alarm.setAdapter(adapter_Alarm);
         adapter_Alarm.notifyDataSetChanged();
+
+
+        setEventFab();
         return view;
     }
 
@@ -69,5 +73,11 @@ public class AlarmFragment extends Fragment {
         alarmList.add(new Alarm("20:55", 10,"Ăn tối !"));
         alarmList.add(new Alarm("09:18", 11,"Làm vườn !"));
         return alarmList;
+    }
+    private void setEventFab(){
+        fabAdd_Alarm.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CreateNewAlarmActivity.class);
+            startActivityForResult(intent,99);
+        });
     }
 }

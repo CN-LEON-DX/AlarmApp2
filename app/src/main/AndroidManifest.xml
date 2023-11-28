@@ -21,7 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AlarmApp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Activity.CreateNewAlarmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.SettingActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.SelectClockActivity"
             android:exported="false" />
@@ -36,10 +41,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Broadcast.Broadcast_Alarm_Receiver"
-            android:exported="true">
-         
-        </receiver>
+        <receiver
+            android:name=".Broadcast.Broadcast_Alarm_Receiver"
+            android:exported="true" />
     </application>
 
 </manifest>

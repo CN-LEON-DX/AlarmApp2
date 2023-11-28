@@ -1,13 +1,11 @@
 package com.example.alarmapp.Fragment;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,13 +42,6 @@ public class ClockFragment extends Fragment{
         // Required empty public constructor
     }
 
-    public static ClockFragment newInstance(String param1, String param2) {
-        ClockFragment fragment = new ClockFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +58,7 @@ public class ClockFragment extends Fragment{
         RecyclerView recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
         fabAdd_Clock = view.findViewById(R.id.fabAddClock);
         tvDate =view.findViewById(R.id.tv_date);
-        //initialization object
+        //initialize object
         clockList = new ArrayList<>();
         database= new WatchTimeCityDatabase(getContext());
         clockRecyclerAdapter = Clock_Recycler_Adapter.createInstance();
@@ -103,12 +94,9 @@ public class ClockFragment extends Fragment{
         }
     }
     public void setListenerForFabButton(){
-        fabAdd_Clock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SelectClockActivity.class);
-                startActivityForResult(intent,99);
-            }
+        fabAdd_Clock.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SelectClockActivity.class);
+            startActivityForResult(intent,99);
         });
     }
 
@@ -122,16 +110,20 @@ public class ClockFragment extends Fragment{
             String timeZone = data.getStringExtra("timeZone");
             boolean isSelected =false;
             for(Clock clockFromList : clockList){
-                if(clockFromList.getCity().equals(city)) isSelected = true;
+                if (clockFromList.getCity().equals(city)) {
+                    isSelected = true;
+                    break;
+                }
             }
             if(!isSelected){
                 database.putData(new Clock(city,timeDifferences,timeZone));
                 clock.setCity(city);
-                clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
+                if(timeDifferences!=null)
+                    clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
                 clock.setTimeZone(timeZone);
                 clockList.add(0,clock);
                 clockRecyclerAdapter.notifyItemInserted(0);
-            }else Toast.makeText(getContext(),"bạn đã chọn thành phố này",Toast.LENGTH_LONG).show();
+            }else Toast.makeText(getContext(),R.string.notifyUserSelectedThisCity,Toast.LENGTH_LONG).show();
         }
     }
     public void setDataForTvDate(){
@@ -139,8 +131,5 @@ public class ClockFragment extends Fragment{
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
-    }
-    private void setAutoUpdateTime(){
-
     }
 }

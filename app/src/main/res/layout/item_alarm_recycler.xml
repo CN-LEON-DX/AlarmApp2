@@ -36,17 +36,18 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"/>
     </LinearLayout>
+
     <androidx.appcompat.widget.SwitchCompat
-        android:thumbTint="@drawable/switch_thumb_selector"
-        app:trackTint="@drawable/switch_track_selector"
-        app:switchMinWidth="50dp"
+        android:id="@+id/switch_item_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:id="@+id/switch_item_alarm"
         android:layout_gravity="center_vertical|end"
         android:background="#000000"
         android:backgroundTint="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:thumbTint="@color/thumb_tint_switch"
+        app:switchMinWidth="50dp"
+        app:trackTint="@color/track_tint_switch" />
 
 </RelativeLayout>
