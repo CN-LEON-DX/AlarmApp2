@@ -34,7 +34,7 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItemView = convertView;
         if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.item_clock_recycler, parent, false);
+            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.item_list_select_clock, parent, false);
         }
         Clock clock = getItem(position);
         TextView tvGmt = listItemView.findViewById(R.id.tvGMT);
@@ -47,6 +47,10 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
 
         return listItemView;
     }
+    //luus setting
+    //gửi setting đến broadcast
+    //nếu cần sửa báo thức
+
     @Override
     public Filter getFilter() {
         return new Filter() {

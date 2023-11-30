@@ -2,12 +2,14 @@ package com.example.alarmapp.Base;
 
 public class Alarm {
     private String time_alarm;
-    private int id;
+    private String id;
+    private Boolean isTurnOn =true;
     private String message;
 
-    public Alarm(String time_alarm, int id, String message) {
+    public Alarm(String id, String time_alarm, Boolean isTurnOn, String message) {
         this.time_alarm = time_alarm;
         this.id = id;
+        this.isTurnOn = isTurnOn;
         this.message = message;
     }
 
@@ -32,11 +34,19 @@ public class Alarm {
         this.message = message;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getTurnOn() {
+        return isTurnOn;
+    }
+
+    public void setTurnOn(Boolean turnOn) {
+        isTurnOn = turnOn;
     }
 }

@@ -26,6 +26,7 @@ public class Main_AlarmActivity extends AppCompatActivity {
     private Button btnSetting;
     private ImageView imageSetting;
     private  ViewPager2 viewPager;
+    private TextView tvEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,9 @@ public class Main_AlarmActivity extends AppCompatActivity {
         imageSetting = findViewById(R.id.imageSetting);
         btnSetting=findViewById(R.id.btn_setting);
         tabLayout = findViewById(R.id.tabLayout);
+        tvEdit = findViewById(R.id.tvEdit);
         viewPager = findViewById(R.id.viewPager2);
-
+        viewPager.setUserInputEnabled(false);
         /*
             initialize object
         */

@@ -10,7 +10,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.NOTIFICATION_POLICY_ACCESS" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,13 +26,13 @@
         tools:targetApi="31">
         <activity
             android:name=".Activity.CreateNewAlarmActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activity.SettingActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activity.SelectClockActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activity.Main_AlarmActivity"
             android:exported="true">

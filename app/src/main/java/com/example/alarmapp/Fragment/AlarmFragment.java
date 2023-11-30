@@ -3,10 +3,13 @@ package com.example.alarmapp.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,10 @@ import android.widget.ScrollView;
 import com.example.alarmapp.Activity.CreateNewAlarmActivity;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
 import com.example.alarmapp.Base.Alarm;
+import com.example.alarmapp.Base.Clock;
+import com.example.alarmapp.Base.SwipToDeleteAlarm;
+import com.example.alarmapp.Base.SwipeToDeleteClock;
+import com.example.alarmapp.Database.AlarmDataBase;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -26,7 +33,8 @@ public class AlarmFragment extends Fragment {
     private RecyclerView recyclerView_Alarm;
     private List<Alarm> alarmList;
     private Alarm_Recycler_Adapter adapter_Alarm;
-    private ScrollView scrollHour,scrollMinute;
+    private AlarmDataBase dataBase;
+
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -47,32 +55,42 @@ public class AlarmFragment extends Fragment {
         // find id
         recyclerView_Alarm = view.findViewById(R.id.rcvList_Alarm);
         fabAdd_Alarm = view.findViewById(R.id.fabAddAlarm);
-        scrollHour=view.findViewById(R.id.scroll_hour);
+        //init object
+        alarmList = new ArrayList<>();
+        dataBase = new AlarmDataBase(getContext());
         // Tạo và cấu hình RecyclerView
-        adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), createAlarmList());
+        adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), alarmList, dataBase);
         recyclerView_Alarm.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Alarm.setAdapter(adapter_Alarm);
+
+        // Them vao database khi thoat ra
+        initRecyclerViewWhenStart();
         adapter_Alarm.notifyDataSetChanged();
 
-
         setEventFab();
+        // Tạo và thiết lập ItemTouchHelper
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipToDeleteAlarm(adapter_Alarm,this,dataBase));
+        itemTouchHelper.attachToRecyclerView(recyclerView_Alarm);
         return view;
     }
 
-    // Tạo một danh sách thông tin các báo thức
-    private List<Alarm> createAlarmList() {
-        alarmList = new ArrayList<>();
-        alarmList.add(new Alarm("07:05", 1,"Chào sáng vui vẻ !"));
-        alarmList.add(new Alarm("12:03", 2,"Buổi trưa !"));
-        alarmList.add(new Alarm("08:11", 3,"Làm bài tập !"));
-        alarmList.add(new Alarm("06:08", 4,"Nghe nhạc !"));
-        alarmList.add(new Alarm("15:54", 5,"Đọc truyện !"));
-        alarmList.add(new Alarm("14:49", 6,"Chạy bộ !"));
-        alarmList.add(new Alarm("12:28", 8,"Nấu ăn trưa !"));
-        alarmList.add(new Alarm("08:55", 9,"Đi học ở trường !"));
-        alarmList.add(new Alarm("20:55", 10,"Ăn tối !"));
-        alarmList.add(new Alarm("09:18", 11,"Làm vườn !"));
-        return alarmList;
+    public void initRecyclerViewWhenStart(){
+        List<Alarm> list = new ArrayList<>();
+        dataBase.getData(list);
+        for(Alarm alarm : list){
+            String id = alarm.getId();
+            String time = alarm.getTime_alarm();
+            Boolean status = alarm.getTurnOn();
+            String message = alarm.getMessage();
+            Alarm alarmAdapter = new Alarm();
+            alarmAdapter.setId(id);
+            alarmAdapter.setTime_alarm(time);
+            alarmAdapter.setMessage(message);
+            alarmAdapter.setTurnOn(status);
+            alarmList.add(0,alarmAdapter);
+            adapter_Alarm.notifyItemInserted(0);
+            Log.i("TAG", String.valueOf(alarm.getTurnOn()));
+        }
     }
     private void setEventFab(){
         fabAdd_Alarm.setOnClickListener(v -> {
@@ -80,4 +98,19 @@ public class AlarmFragment extends Fragment {
             startActivityForResult(intent,99);
         });
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==99&&resultCode==98){
+            String time = data.getStringExtra("time");
+            String name = data.getStringExtra("nameAlarm");
+            Alarm newAlarm = new Alarm(alarmList.size()+"", time , true, name);
+            alarmList.add(newAlarm);
+            adapter_Alarm.notifyItemInserted(alarmList.size());
+            // Ihem database vao !
+            dataBase.putData(newAlarm);
+        }
+    }
+
 }

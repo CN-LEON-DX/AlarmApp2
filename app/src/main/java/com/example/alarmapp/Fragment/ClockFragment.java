@@ -90,7 +90,6 @@ public class ClockFragment extends Fragment{
             clockAdapter.setTimeZone(timeZone);
             clockList.add(clockAdapter);
             clockRecyclerAdapter.notifyItemInserted(clockList.size());
-
         }
     }
     public void setListenerForFabButton(){

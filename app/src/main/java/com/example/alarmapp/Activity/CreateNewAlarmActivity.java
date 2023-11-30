@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,10 +15,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alarmapp.Fragment.AlarmFragment;
 import com.example.alarmapp.R;
 
 public class CreateNewAlarmActivity extends AppCompatActivity {
-    private ScrollView scrollHour,scrollMinute;
+    private EditText edtHour, edtMinute;
     private RelativeLayout layoutNameAlarm,layoutlaplai,layoutSound;
     private TextView tvNameAlarm,tvlaplai,tvSound;
     private ImageView imageViewBack, imgSave;
@@ -26,8 +28,8 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_alarm);
         //find id
-        scrollHour = findViewById(R.id.scroll_hour);
-        scrollMinute = findViewById(R.id.scroll_minute);
+        edtMinute = findViewById(R.id.tvMinute);
+        edtHour = findViewById(R.id.tvHour);
         layoutNameAlarm = findViewById(R.id.layout_nameAlarm);
         layoutlaplai = findViewById(R.id.layout_lapLai);
         layoutSound = findViewById(R.id.layout_selectSound);
@@ -42,6 +44,9 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         setEventLayoutlaplai();
         //
         setEventForLayoutSelectSound();
+        //
+        backLayout();
+        save();
     }
     private void setEventForLayoutNameAlarm(){
         layoutNameAlarm.setOnClickListener(v -> {
@@ -57,7 +62,6 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             String userInput = input.getText().toString();
             if(userInput.isEmpty()) userInput="Báo thức";
             tvNameAlarm.setText(userInput);
-
         });
         builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
 
@@ -126,5 +130,43 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         builder.setPositiveButton("Hủy", (dialog, which) -> {dialog.cancel();});
         builder.show();
 
+    }
+    void backLayout(){
+        imageViewBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+    private void save(){
+        imgSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String hour = edtHour.getText().toString();
+                String minute = edtMinute.getText().toString();
+
+                try {
+                    int intHour = Integer.parseInt(hour);
+                    int intMinute = Integer.parseInt(minute);
+                    if (intHour >= 24 || intHour < 0 || intMinute >= 60 || intMinute <= 0){
+                        Toast.makeText(CreateNewAlarmActivity.this, "Hãy nhập đúng giờ phút !", Toast.LENGTH_SHORT).show();
+                    }else {
+                        String nameAlarm = tvNameAlarm.getText().toString();
+                        intentResult(nameAlarm,hour+":"+minute);
+                    }
+                } catch (Exception e){
+                    String nameAlarm = tvNameAlarm.getText().toString();
+                    intentResult(nameAlarm,"00:00");
+                }
+            }
+        });
+    }
+    private void intentResult(String nameAlarm, String time){
+        Intent intent = new Intent(CreateNewAlarmActivity.this, AlarmFragment.class);
+        intent.putExtra("nameAlarm",nameAlarm);
+        intent.putExtra("time",time);
+        setResult(98,intent);
+        finish();
     }
 }
