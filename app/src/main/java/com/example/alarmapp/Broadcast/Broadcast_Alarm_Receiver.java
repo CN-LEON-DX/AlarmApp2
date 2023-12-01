@@ -28,5 +28,8 @@ public class Broadcast_Alarm_Receiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(1, builder.build());
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, com.example.alarmapp.R.raw.sound_chicken);
+        mediaPlayer.start();
     }
 }

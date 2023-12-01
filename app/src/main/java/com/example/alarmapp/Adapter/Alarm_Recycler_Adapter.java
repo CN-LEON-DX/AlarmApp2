@@ -84,7 +84,9 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
         alarmManager.cancel(pendingIntent);
     }
 
-
+    /*
+    * ViewHolder cho Adapter
+    **/
     class AlarmViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTime;
         private TextView tvMessage;
@@ -125,7 +127,6 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
                 Toast.makeText(context, "Item clicked: " + clickedAlarm.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
-
         void eventClickSwitch(Context context, Alarm alarm) {
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -147,7 +148,6 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
         }
 
         private void setAlarm(Alarm alarm) {
-            // time sample: 09:08
             String time = tvTime.getText().toString().trim();
             String str[] = time.split(":");
             int hour = Integer.parseInt(str[0]);

@@ -142,7 +142,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp">
 
         <TextView
@@ -167,41 +167,42 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/img_saveNewAlarm">
+        android:layout_below="@id/img_saveNewAlarm"
+        android:layout_marginTop="30dp">
 
         <EditText
             android:id="@+id/tvHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="155dp"
-            android:layout_marginEnd="20dp"
+            android:layout_toLeftOf="@id/tv_doubleDot"
             android:hint="00"
-            android:textColorHint="@color/white"
-            android:maxLength="2"
             android:inputType="number"
+            android:maxLength="2"
             android:textColor="@color/white"
-            android:textSize="30dp" />
+            android:textColorHint="@color/white"
+            android:textSize="40sp" />
 
         <TextView
+            android:id="@+id/tv_doubleDot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="9dp"
             android:text=":"
             android:textColor="@color/white"
-            android:textSize="30dp" />
+            android:textSize="40dp" />
 
         <EditText
             android:id="@+id/tvMinute"
-            android:inputType="number"
-            android:maxLength="2"
-            android:textColorHint="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="155dp"
+            android:layout_alignParentEnd="false"
+            android:layout_toRightOf="@id/tv_doubleDot"
             android:hint="00"
+            android:inputType="number"
+            android:maxLength="2"
             android:textColor="@color/white"
-            android:textSize="30dp" />
+            android:textColorHint="@color/white"
+            android:textSize="40dp" />
     </RelativeLayout>
     </RelativeLayout>
