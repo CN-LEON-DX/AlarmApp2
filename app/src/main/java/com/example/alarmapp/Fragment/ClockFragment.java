@@ -73,10 +73,8 @@ public class ClockFragment extends Fragment{
         //set text tvDate
         setDataForTvDate();
         initRecyclerViewWhenStart();
+        //set event delete item
         setEventDeleteItemRecyclerView();
-//        // Tạo và thiết lập ItemTouchHelper
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteClock( clockRecyclerAdapter, database,this));
-//        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         return view;
     }
 
