@@ -87,6 +87,7 @@ public class AlarmDataBase extends SQLiteOpenHelper {
         }
     }
     public void putData(@NonNull Alarm alarm){
+        Log.i("Tag put database:", " you just add");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_ID_NAME, alarm.getId());

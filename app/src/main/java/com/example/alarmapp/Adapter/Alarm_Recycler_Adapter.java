@@ -38,6 +38,10 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
     private Context context;
     private AlarmDataBase alarmDataBase;
     private static  final String CHANNEL_ID = "remind_channel";
+    private TextView tvTime;
+    private TextView tvMessage;
+    private SwitchCompat switchCompat;
+
 
     public Alarm_Recycler_Adapter(Context context, List<Alarm> alarmList,AlarmDataBase dataBase) {
         this.context = context;
@@ -47,6 +51,8 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
     public Alarm getAlarm(int position){
         return alarmList.get(position);
     }
+
+
     @NonNull
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -72,6 +78,7 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
             cancelAlarm(removedAlarm);
         }
     }
+    // Hàm huyr báo thức
     public void cancelAlarm(Alarm alarm){
         Intent intent = new Intent(context, Broadcast_Alarm_Receiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarm.getId(), intent, PendingIntent.FLAG_IMMUTABLE);
@@ -79,16 +86,11 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
-
     /*
     * ViewHolder cho Adapter
     **/
+
     class AlarmViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTime;
-        private TextView tvMessage;
-        private SwitchCompat switchCompat;
-
-
         public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTime = itemView.findViewById(R.id.tvTime);
@@ -139,52 +141,38 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
             }
         }
 
-//        private void setAlarm(Alarm alarm) {
-//            String time = tvTime.getText().toString().trim();
-//            String str[] = time.split(":");
-//            int hour = Integer.parseInt(str[0]);
-//            int minute = Integer.parseInt(str[1]);
-//            Intent intent = new Intent(context, Broadcast_Alarm_Receiver.class);
-//            intent.putExtra("message", tvMessage.getText().toString().trim());
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(alarm.getId()), intent , PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-//            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(Calendar.HOUR_OF_DAY, hour);
-//            calendar.set(Calendar.MINUTE, minute);
-//            calendar.set(Calendar.SECOND, 0);
-//            // thiêt lập để lặp lại hằng ngày !
-//            alarmManager.setRepeating(
-//                    AlarmManager.RTC_WAKEUP,
-//                    calendar.getTimeInMillis(),
-//                    AlarmManager.INTERVAL_DAY,
-//                    pendingIntent
-//            );
-//            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-//            createNotificationChannel();
-//        }
-//
-//        private void createNotificationChannel() {
-//            NotificationChannel channel = new NotificationChannel(
-//                    CHANNEL_ID,
-//                    "Nhắc nhở hàng ngày",
-//                    NotificationManager.IMPORTANCE_DEFAULT
-//            );
-//            //Toast.makeText(context, "NBotification 1", Toast.LENGTH_SHORT).show();
-//
-//            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//
-//
-//        // Hàm huyr báo thức
-//        public void cancelAlarm(Alarm alarm){
-//            Intent intent = new Intent(context, Broadcast_Alarm_Receiver.class);
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(alarm.getId()), intent, PendingIntent.FLAG_IMMUTABLE);
-//
-//            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//            alarmManager.cancel(pendingIntent);
-//            Toast.makeText(context, "Bạn vừa hủy báo thức \n" + tvMessage.getText().toString(), Toast.LENGTH_SHORT).show();
-//        }
-   }
-
+        public void setAlarm(Alarm alarm) {
+            String time = alarm.getTime_alarm();
+            int hour = Integer.parseInt(time.substring(0, 1));
+            int minute = Integer.parseInt(time.substring(3, 4));
+            Intent intent = new Intent(context, Broadcast_Alarm_Receiver.class);
+            intent.putExtra("message", tvMessage.getText().toString().trim());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarm.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+            // thiêt lập để lặp lại hằng ngày !
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+            );
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            createNotificationChannel();
+        }
+    }
+    public void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                "Nhắc nhở hàng ngày",
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        //Toast.makeText(context, "NBotification 1", Toast.LENGTH_SHORT).show();
+        Log.i("Tag notify", "create new notify");
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+    }
 }

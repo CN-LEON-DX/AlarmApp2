@@ -18,7 +18,6 @@ import com.example.alarmapp.R;
 
 public class Broadcast_Alarm_Receiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "remind_channel";
-
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
@@ -28,7 +27,7 @@ public class Broadcast_Alarm_Receiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(1, builder.build());
-
+        // Thêm sound cho báo thức
         MediaPlayer mediaPlayer = MediaPlayer.create(context, com.example.alarmapp.R.raw.sound_chicken);
         mediaPlayer.start();
     }

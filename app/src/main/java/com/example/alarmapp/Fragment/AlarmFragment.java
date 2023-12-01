@@ -34,7 +34,7 @@ public class AlarmFragment extends Fragment {
     private List<Alarm> alarmList;
     private Alarm_Recycler_Adapter adapter_Alarm;
     private AlarmDataBase dataBase;
-
+    private int idAlarm=0;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -81,17 +81,22 @@ public class AlarmFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==99&&resultCode==98){
             String time = data.getStringExtra("time");
+            Log.i("Tag t", time);
             String name = data.getStringExtra("nameAlarm");
+            Log.i("tag", name);
             String sound = data.getStringExtra("sound");
             String repeat= data.getStringExtra("repeat");
             boolean isVibrate=data.getBooleanExtra("isVibrate",false);
             boolean isRepeat = data.getBooleanExtra("isRepeat",false);
-            Alarm newAlarm = new Alarm(time,alarmList.size()+1,true,name,sound,repeat,isVibrate,isRepeat);
+            Alarm newAlarm = new Alarm(time,++idAlarm,true,name,sound,repeat,isVibrate,isRepeat);
             alarmList.add(0,newAlarm);
-            adapter_Alarm.notifyItemInserted(alarmList.size());
+            adapter_Alarm.notifyItemInserted(0);
+            // Goi adapter them vào các alarm và thông báo của nó
             // Ihem database vao !
             dataBase.putData(newAlarm);
+
         }
     }
+
 
 }
