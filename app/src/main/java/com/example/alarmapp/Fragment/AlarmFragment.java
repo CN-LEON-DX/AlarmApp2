@@ -40,13 +40,6 @@ public class AlarmFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AlarmFragment newInstance(String param1, String param2) {
-        AlarmFragment fragment = new AlarmFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,11 +55,9 @@ public class AlarmFragment extends Fragment {
         adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), alarmList, dataBase);
         recyclerView_Alarm.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Alarm.setAdapter(adapter_Alarm);
-
         // Them vao database khi thoat ra
         initRecyclerViewWhenStart();
-        adapter_Alarm.notifyDataSetChanged();
-
+        //set event
         setEventFab();
         // Tạo và thiết lập ItemTouchHelper
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipToDeleteAlarm(adapter_Alarm,this,dataBase));
@@ -75,22 +66,8 @@ public class AlarmFragment extends Fragment {
     }
 
     public void initRecyclerViewWhenStart(){
-        List<Alarm> list = new ArrayList<>();
-        dataBase.getData(list);
-        for(Alarm alarm : list){
-            String id = alarm.getId();
-            String time = alarm.getTime_alarm();
-            Boolean status = alarm.getTurnOn();
-            String message = alarm.getMessage();
-            Alarm alarmAdapter = new Alarm();
-            alarmAdapter.setId(id);
-            alarmAdapter.setTime_alarm(time);
-            alarmAdapter.setMessage(message);
-            alarmAdapter.setTurnOn(status);
-            alarmList.add(0,alarmAdapter);
-            adapter_Alarm.notifyItemInserted(0);
-            Log.i("TAG", String.valueOf(alarm.getTurnOn()));
-        }
+        dataBase.getData(alarmList);
+        adapter_Alarm.notifyDataSetChanged();
     }
     private void setEventFab(){
         fabAdd_Alarm.setOnClickListener(v -> {
@@ -105,8 +82,12 @@ public class AlarmFragment extends Fragment {
         if(requestCode==99&&resultCode==98){
             String time = data.getStringExtra("time");
             String name = data.getStringExtra("nameAlarm");
-            Alarm newAlarm = new Alarm(alarmList.size()+"", time , true, name);
-            alarmList.add(newAlarm);
+            String sound = data.getStringExtra("sound");
+            String repeat= data.getStringExtra("repeat");
+            boolean isVibrate=data.getBooleanExtra("isVibrate",false);
+            boolean isRepeat = data.getBooleanExtra("isRepeat",false);
+            Alarm newAlarm = new Alarm(time,alarmList.size()+1,true,name,sound,repeat,isVibrate,isRepeat);
+            alarmList.add(0,newAlarm);
             adapter_Alarm.notifyItemInserted(alarmList.size());
             // Ihem database vao !
             dataBase.putData(newAlarm);

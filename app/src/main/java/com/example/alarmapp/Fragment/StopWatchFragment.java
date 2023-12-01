@@ -96,6 +96,7 @@ public class StopWatchFragment extends Fragment {
         editor.apply();
     }
     //read Data from SharedPreferences when fragment create and update UI
+
     @SuppressLint("UseRequireInsteadOfGet")
     private void readDataFromSharedPreferences(){
         sharedPreferences= Objects.requireNonNull(getContext()).getSharedPreferences("sharedPrefsStopWatch",Context.MODE_PRIVATE);
@@ -267,21 +268,5 @@ public class StopWatchFragment extends Fragment {
         tv_timeAdd.setText(R.string.defaultStopWatchTime);
         layout.setVisibility(View.GONE);
         if(!stopWatchList.isEmpty()) stopWatchList.clear();
-    }
-    //cách phát âm thanh
-    private  void  playSound(){
-        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(),R.raw.sound_chicken);
-        if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.setLooping(true); // Lặp lại âm thanh
-            mediaPlayer.start();//bắt đầu phát
-        }else{
-            mediaPlayer.stop();
-            try {
-                mediaPlayer.prepare();
-            } catch (IOException e) {
-                Log.e("Lỗi phát âm thanh",e.getMessage());
-            }
-            ;//
-        }
     }
 }

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.util.Printer;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +24,10 @@ public class AlarmDataBase extends SQLiteOpenHelper {
     private static final String COLUMN_TIME="Time";
     private static final String COLUMN_MESSAGE="Message";
     private static final String COLUMN_STATUS="Status";
+    private static final String COLUMN_SOUND="sound";
+    private static final String COLUMN_REPEAT="repeat";
+    private static final String COLUMN_IS_VIBRATE="isVibrate";
+    private static final String COLUMN_IS_REPEAT="isRepeat";
     public AlarmDataBase(Context context) {
         super(context, DATABASE_NAME, null, 2);
     }
@@ -32,37 +37,53 @@ public class AlarmDataBase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " +TABLE_NAME +
                 "("+
-                COLUMN_ID_NAME +" INTEGER PRIMARY KEY, "+
+                COLUMN_ID_NAME +" INT PRIMARY KEY, "+
                 COLUMN_TIME +" STRING, "+
                 COLUMN_MESSAGE + " STRING, " +
-                COLUMN_STATUS + " BOOLEAN "
+                COLUMN_STATUS + " INT, " +
+                COLUMN_REPEAT + " STRING, "+
+                COLUMN_SOUND + " STRING, " +
+                COLUMN_IS_VIBRATE +" INT," +
+                COLUMN_IS_REPEAT + " INT"
                 + ")");
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    private boolean isTrue(int index){
+       return index==1?true:false;
+    }
+    private int isTrue(boolean index){
+        return index?1:0;
+    }
+    @SuppressLint("Range")
     public void getData(List<Alarm> list){
         try{
             SQLiteDatabase db=this.getReadableDatabase();
-            String[] projection ={COLUMN_ID_NAME, COLUMN_TIME,COLUMN_MESSAGE, COLUMN_STATUS};
+            String[] projection ={COLUMN_ID_NAME, COLUMN_TIME,COLUMN_MESSAGE, COLUMN_STATUS,COLUMN_SOUND,COLUMN_REPEAT,COLUMN_IS_VIBRATE,COLUMN_IS_REPEAT};
             Cursor cursor = db.query(TABLE_NAME,projection,null,null,null,null,null);
             if(cursor!=null){
-                if(cursor.moveToNext()){
-                    do{
-                        String index = String.valueOf(list.size()+1);
-                        @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
-                        @SuppressLint("Range") String message =cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE));
-                        @SuppressLint("Range") Boolean isTurnOn = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)));
-                        list.add(0,new Alarm(index,time,isTurnOn, message));
-                        Log.i("TAG", String.valueOf(isTurnOn));
-                    }while (cursor.moveToNext());
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        int id = list.size() + 1;
+                        String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
+                        String message = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE));
+                        int status = cursor.getInt(cursor.getColumnIndex(COLUMN_STATUS));
+                        String repeat = cursor.getString(cursor.getColumnIndex(COLUMN_REPEAT));
+                        String sound = cursor.getString(cursor.getColumnIndex(COLUMN_SOUND));
+                        int vibrate = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_VIBRATE));
+                        int isRepeat = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_REPEAT));
+                        Alarm alarm = new Alarm(time, id, isTrue(status), message, sound, repeat, isTrue(vibrate), isTrue(isRepeat));
+                        list.add(0, alarm);
+                    }
+                    cursor.close();
                 }
-                cursor.close();
+
             }
             db.close();
         } catch (Exception e){
-                Log.i("ERROR DATABASE1", "LOI DOC GHI DATABASE");
+                Log.e("ERROR DATABASE1", "LOI DOC GHI DATABASE");
         }
     }
     public void putData(@NonNull Alarm alarm){
@@ -71,13 +92,12 @@ public class AlarmDataBase extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ID_NAME, alarm.getId());
         contentValues.put(COLUMN_TIME,alarm.getTime_alarm());
         contentValues.put(COLUMN_MESSAGE,alarm.getMessage());
-        contentValues.put(COLUMN_STATUS, alarm.getTurnOn()+"");
+        contentValues.put(COLUMN_STATUS,isTrue(alarm.getTurnOn()));
+        contentValues.put(COLUMN_REPEAT,alarm.getRepeat());
+        contentValues.put(COLUMN_SOUND,alarm.getSound());
+        contentValues.put(COLUMN_IS_VIBRATE,isTrue(alarm.isVibrate()));
+        contentValues.put(COLUMN_IS_REPEAT,isTrue(alarm.isRepeat()));
         db.insert(TABLE_NAME,null,contentValues);
-        db.close();
-    }
-    public void clearData(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(TABLE_NAME,null,null);
         db.close();
     }
     public void deleteData(Alarm alarm){
@@ -87,11 +107,21 @@ public class AlarmDataBase extends SQLiteOpenHelper {
     }
     public void updateDatabase(Alarm alarm){
         SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_ID_NAME, alarm.getId());
+        contentValues.put(COLUMN_TIME,alarm.getTime_alarm());
+        contentValues.put(COLUMN_MESSAGE,alarm.getMessage());
+        contentValues.put(COLUMN_STATUS,isTrue(alarm.getTurnOn()));
+        contentValues.put(COLUMN_REPEAT,alarm.getRepeat());
+        contentValues.put(COLUMN_SOUND,alarm.getSound());
+        contentValues.put(COLUMN_IS_VIBRATE,isTrue(alarm.isVibrate()));
+        contentValues.put(COLUMN_IS_VIBRATE,isTrue(alarm.isRepeat()));
+        db.update(TABLE_NAME,contentValues,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(alarm.getId())});
+    }
+    public void updateStatusSwitch(Alarm alarm){
+        SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_ID_NAME,alarm.getId());
-        values.put(COLUMN_TIME,alarm.getTime_alarm());
-        values.put(COLUMN_MESSAGE,alarm.getMessage());
-        values.put(COLUMN_STATUS, alarm.getTurnOn());
-        db.update(TABLE_NAME,values,COLUMN_ID_NAME+"=?",new String[]{alarm.getId()});
+        values.put(COLUMN_STATUS,isTrue(alarm.getTurnOn()));
+        db.update(TABLE_NAME,values,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(alarm.getId())});
     }
 }

@@ -16,4 +16,5 @@
     <string name="titleAlertDialog">thông báo</string>
     <string name="formatDate">EEEE, dd/MM/yyyy</string>
     <string name="notifyUserSelectedThisCity">bạn đã chọn thành phố này</string>
+    <string name="repeatOneTime">chỉ một lần</string>
 </resources>

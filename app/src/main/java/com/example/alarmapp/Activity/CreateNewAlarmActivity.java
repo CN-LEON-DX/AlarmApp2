@@ -2,10 +2,12 @@ package com.example.alarmapp.Activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -20,9 +22,10 @@ import com.example.alarmapp.R;
 
 public class CreateNewAlarmActivity extends AppCompatActivity {
     private EditText edtHour, edtMinute;
-    private RelativeLayout layoutNameAlarm,layoutlaplai,layoutSound;
-    private TextView tvNameAlarm,tvlaplai,tvSound;
+    private RelativeLayout layoutNameAlarm,layoutrepeat,layoutSound;
+    private TextView tvNameAlarm,tvrepeat,tvSound;
     private ImageView imageViewBack, imgSave;
+    private SwitchCompat switchVibrate,switchRepeat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,17 +34,19 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         edtMinute = findViewById(R.id.tvMinute);
         edtHour = findViewById(R.id.tvHour);
         layoutNameAlarm = findViewById(R.id.layout_nameAlarm);
-        layoutlaplai = findViewById(R.id.layout_lapLai);
+        layoutrepeat = findViewById(R.id.layout_repeat);
         layoutSound = findViewById(R.id.layout_selectSound);
-        tvlaplai = findViewById(R.id.tv_lapLai);
+        tvrepeat = findViewById(R.id.tv_repeat);
         tvNameAlarm=findViewById(R.id.tv_nameAlarm);
         tvSound=findViewById(R.id.tv_sound);
         imageViewBack= findViewById(R.id.img_cancel_activity);
         imgSave = findViewById(R.id.img_saveNewAlarm);
+        switchVibrate=findViewById(R.id.switch_vibrate);
+        switchRepeat = findViewById(R.id.switch_repeat);
         //
         setEventForLayoutNameAlarm();
         //
-        setEventLayoutlaplai();
+        setEventLayoutrepeat();
         //
         setEventForLayoutSelectSound();
         //
@@ -67,12 +72,12 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
 
         builder.show();
     }
-    private void setEventLayoutlaplai(){
-        layoutlaplai.setOnClickListener(v->{
-            showDialoglaplai();
+    private void setEventLayoutrepeat(){
+        layoutrepeat.setOnClickListener(v->{
+            showDialogrepeat();
         });
     }
-    private void showDialoglaplai() {
+    private void showDialogrepeat() {
         final StringBuilder result = new StringBuilder();
         final boolean[] checkedItems = new boolean[]{false, false, false, false, false, false, false};
         String[] options = {"thứ 2", "thứ 3", "thứ 4", "thứ 5", "thứ 6", "thứ 7", "chủ nhật"};
@@ -97,10 +102,10 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             // Kiểm tra xem có ít nhất một tùy chọn nào được chọn trước khi cập nhật TextView
             if (result.length() > 0) {
                 // Loại bỏ dấu ',' cuối cùng và cập nhật TextView
-                tvlaplai.setText(result.substring(0, result.length() - 2));
+                tvrepeat.setText(result.substring(0, result.length() - 2));
             } else {
                 // Không có tùy chọn nào được chọn
-                tvlaplai.setText("chỉ một lần");
+                tvrepeat.setText("chỉ một lần");
             }
         });
 
@@ -139,34 +144,51 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             }
         });
     }
-    private void save(){
-        imgSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String hour = edtHour.getText().toString();
-                String minute = edtMinute.getText().toString();
+    private void save() {
+        imgSave.setOnClickListener(v -> {
+            String hour = edtHour.getText().toString();
+            String minute = edtMinute.getText().toString();
+            String nameAlarm = tvNameAlarm.getText().toString();
 
-                try {
-                    int intHour = Integer.parseInt(hour);
-                    int intMinute = Integer.parseInt(minute);
-                    if (intHour >= 24 || intHour < 0 || intMinute >= 60 || intMinute <= 0){
-                        Toast.makeText(CreateNewAlarmActivity.this, "Hãy nhập đúng giờ phút !", Toast.LENGTH_SHORT).show();
-                    }else {
-                        String nameAlarm = tvNameAlarm.getText().toString();
-                        intentResult(nameAlarm,hour+":"+minute);
-                    }
-                } catch (Exception e){
-                    String nameAlarm = tvNameAlarm.getText().toString();
-                    intentResult(nameAlarm,"00:00");
-                }
+            int intHour = parseValue(hour);
+            int intMinute = parseValue(minute);
+
+            if (!isValidTime(intHour, intMinute)) {
+                Toast.makeText(CreateNewAlarmActivity.this, "Hãy nhập đúng giờ phút !", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            String formattedTime = formatTime(intHour, intMinute);
+            result( formattedTime);
         });
     }
-    private void intentResult(String nameAlarm, String time){
+
+    private int parseValue(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private boolean isValidTime(int hour, int minute) {
+        return hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
+    }
+
+    private String formatTime(int hour, int minute) {
+        return String.format("%02d:%02d", hour, minute);
+    }
+
+    private void result( String time) {
         Intent intent = new Intent(CreateNewAlarmActivity.this, AlarmFragment.class);
-        intent.putExtra("nameAlarm",nameAlarm);
-        intent.putExtra("time",time);
-        setResult(98,intent);
+        intent.putExtra("sound",tvSound.getText());
+        intent.putExtra("isRepeat",switchRepeat.isChecked());
+        intent.putExtra("isVibrate",switchVibrate.isChecked());
+        intent.putExtra("repeat",tvrepeat.getText());
+        intent.putExtra("nameAlarm", tvNameAlarm.getText());
+        intent.putExtra("time", time);
+        setResult(98, intent);
         finish();
     }
+
 }

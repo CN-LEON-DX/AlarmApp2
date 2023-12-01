@@ -73,7 +73,7 @@
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switch_baoLai"
+        android:id="@+id/switch_repeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/switch_vibrate"
@@ -88,7 +88,7 @@
         android:id="@+id/layout_selectSound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_lapLai"
+        android:layout_below="@id/layout_repeat"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp">
@@ -111,7 +111,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/layout_lapLai"
+        android:id="@+id/layout_repeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_nameAlarm"
@@ -128,7 +128,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_lapLai"
+            android:id="@+id/tv_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_titleLapLai"
