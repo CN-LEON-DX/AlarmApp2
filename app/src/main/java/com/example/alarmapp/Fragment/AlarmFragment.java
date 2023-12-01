@@ -13,14 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.example.alarmapp.Activity.CreateNewAlarmActivity;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
 import com.example.alarmapp.Base.Alarm;
-import com.example.alarmapp.Base.Clock;
+import com.example.alarmapp.Base.RecyclerItemClickListener;
 import com.example.alarmapp.Base.SwipToDeleteAlarm;
-import com.example.alarmapp.Base.SwipeToDeleteClock;
 import com.example.alarmapp.Database.AlarmDataBase;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -62,6 +61,7 @@ public class AlarmFragment extends Fragment {
         // Tạo và thiết lập ItemTouchHelper
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipToDeleteAlarm(adapter_Alarm,this,dataBase));
         itemTouchHelper.attachToRecyclerView(recyclerView_Alarm);
+        setEventRecyclerView();
         return view;
     }
 
@@ -99,6 +99,18 @@ public class AlarmFragment extends Fragment {
 
         }
     }
+    private void setEventRecyclerView(){
+        recyclerView_Alarm.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView_Alarm, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
 
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                Toast.makeText(getContext(),"vxdsfs",Toast.LENGTH_SHORT).show();
+            }
+        }));
+    }
 
 }

@@ -16,6 +16,7 @@ import com.example.alarmapp.Base.Clock;
 import com.example.alarmapp.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Adapter.ClockViewHolder> {
 
@@ -53,7 +54,6 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
     public void deleteItem(int position){
         ArrayList<Clock> currentList = new ArrayList<>(getCurrentList());
         currentList.remove(position);
-        submitList(currentList);
         notifyDataSetChanged();
     }
     public ArrayList<Clock> getList(){

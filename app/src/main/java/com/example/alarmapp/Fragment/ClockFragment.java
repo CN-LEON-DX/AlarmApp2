@@ -1,6 +1,7 @@
 package com.example.alarmapp.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -19,7 +21,6 @@ import com.example.alarmapp.Activity.SelectClockActivity;
 import com.example.alarmapp.Adapter.Clock_Recycler_Adapter;
 import com.example.alarmapp.Base.Clock;
 
-import com.example.alarmapp.Base.SwipeToDeleteClock;
 import com.example.alarmapp.Database.WatchTimeCityDatabase;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +39,7 @@ public class ClockFragment extends Fragment{
     private TextView tvDate;
     private WatchTimeCityDatabase database;
     private Clock_Recycler_Adapter clockRecyclerAdapter;
+    private RecyclerView recyclerView_Clock;
     public ClockFragment() {
         // Required empty public constructor
     }
@@ -55,7 +57,7 @@ public class ClockFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
         //find id
-        RecyclerView recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
+        recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
         fabAdd_Clock = view.findViewById(R.id.fabAddClock);
         tvDate =view.findViewById(R.id.tv_date);
         //initialize object
@@ -71,9 +73,10 @@ public class ClockFragment extends Fragment{
         //set text tvDate
         setDataForTvDate();
         initRecyclerViewWhenStart();
-        // Tạo và thiết lập ItemTouchHelper
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteClock( clockRecyclerAdapter, database,this));
-        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
+        setEventDeleteItemRecyclerView();
+//        // Tạo và thiết lập ItemTouchHelper
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteClock( clockRecyclerAdapter, database,this));
+//        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         return view;
     }
 
@@ -131,5 +134,35 @@ public class ClockFragment extends Fragment{
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
+    }
+    private void setEventDeleteItemRecyclerView(){
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallBack=new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                showDialogDeleteItem(position);
+            }
+        };
+        new ItemTouchHelper(itemTouchHelperCallBack).attachToRecyclerView(recyclerView_Clock);
+    }
+    private void showDialogDeleteItem(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.messageDeleteItem)
+                .setTitle(R.string.titleAlertDialog);
+        builder.setPositiveButton("không",(dialog, which) ->{clockRecyclerAdapter.notifyItemChanged(position);});
+        builder.setNegativeButton("xác nhận",(dialog, which) ->
+        {
+            clockList.remove(position-1);
+            clockRecyclerAdapter.notifyItemRemoved(position);
+            Clock clock = clockList.get(position-1);
+            database.deleteData(clock);
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
