@@ -67,6 +67,7 @@ public class AlarmFragment extends Fragment {
 
     public void initRecyclerViewWhenStart(){
         dataBase.getData(alarmList);
+        idAlarm=alarmList.size()-1;
         adapter_Alarm.notifyDataSetChanged();
     }
     private void setEventFab(){
@@ -90,6 +91,7 @@ public class AlarmFragment extends Fragment {
             boolean isRepeat = data.getBooleanExtra("isRepeat",false);
             Alarm newAlarm = new Alarm(time,++idAlarm,true,name,sound,repeat,isVibrate,isRepeat);
             alarmList.add(0,newAlarm);
+            adapter_Alarm.setAlarm(newAlarm);
             adapter_Alarm.notifyItemInserted(0);
             // Goi adapter them vào các alarm và thông báo của nó
             // Ihem database vao !

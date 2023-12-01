@@ -68,12 +68,12 @@ public class ClockFragment extends Fragment{
         recyclerView_Clock.setAdapter(clockRecyclerAdapter);
         //set event
         setListenerForFabButton();
-        // Tạo và thiết lập ItemTouchHelper
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteClock( clockRecyclerAdapter,database,this));
-        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         //set text tvDate
         setDataForTvDate();
         initRecyclerViewWhenStart();
+        // Tạo và thiết lập ItemTouchHelper
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteClock( clockRecyclerAdapter, database,this));
+        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         return view;
     }
 
@@ -122,6 +122,7 @@ public class ClockFragment extends Fragment{
                 clock.setTimeZone(timeZone);
                 clockList.add(0,clock);
                 clockRecyclerAdapter.notifyItemInserted(0);
+
             }else Toast.makeText(getContext(),R.string.notifyUserSelectedThisCity,Toast.LENGTH_LONG).show();
         }
     }

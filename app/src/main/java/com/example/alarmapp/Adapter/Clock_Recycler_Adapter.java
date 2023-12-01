@@ -56,6 +56,9 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
         submitList(currentList);
         notifyDataSetChanged();
     }
+    public ArrayList<Clock> getList(){
+        return new ArrayList<>(getCurrentList());
+    }
     static class ClockViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvCity;
         private final TextClock tvTimeCurrent;
@@ -67,7 +70,6 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
             tvCity = itemView.findViewById(R.id.tvCity);
             tvGMT = itemView.findViewById(R.id.tvGMT);
         }
-
         public void setData(Clock clock) {
             if (clock.getTimeZone() != null && clock.getCity() != null && clock.getTimeDifferences() != null) {
                 tvTimeCurrent.setTimeZone(clock.getTimeZone());
