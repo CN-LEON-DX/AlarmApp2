@@ -4,7 +4,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,7 @@ public class SettingActivity extends AppCompatActivity {
     private RelativeLayout layoutTimeRing, layoutTimeRepeat, layoutNumberOfIteration, layout_back;
     private SwitchCompat switchNotify,switchFormatClock;
     private TextView tv_timeRing, tv_timeRepeat,tv_NumberOfIteration;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,31 @@ public class SettingActivity extends AppCompatActivity {
         setEventForLayoutRepeat();
         //
         setEventForLayoutNumberOfIteration();
+        //
+        readDataFromSharedPreferences();
     }
+    private void readDataFromSharedPreferences(){
+        sharedPreferences = getSharedPreferences("sharedPrefsSetting", Context.MODE_PRIVATE);
+        tv_timeRepeat.setText(sharedPreferences.getString("timeRepeat","3 phút"));
+        tv_timeRing.setText(sharedPreferences.getString("timeRing","5 phút"));
+        tv_NumberOfIteration.setText(sharedPreferences.getString("number","3 lần"));
+        switchNotify.setChecked(sharedPreferences.getBoolean("notifySwitch",false));
+        switchFormatClock.setChecked(sharedPreferences.getBoolean("formatSwitch",false));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sharedPreferences = getSharedPreferences("sharedPrefsSetting",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("timeRepeat",tv_timeRepeat.getText().toString());
+        editor.putString("timeRing",tv_timeRing.getText().toString());
+        editor.putString("number",tv_NumberOfIteration.getText().toString());
+        editor.putBoolean("notifySwitch",switchNotify.isChecked());
+        editor.putBoolean("formatSwitch",switchFormatClock.isChecked());
+        editor.apply();
+    }
+
     private void setEventForLayoutBack(){
         layout_back.setOnClickListener(v->{
             finish();
