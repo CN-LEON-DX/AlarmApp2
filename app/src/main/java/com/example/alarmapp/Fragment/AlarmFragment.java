@@ -1,5 +1,6 @@
 package com.example.alarmapp.Fragment;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,12 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.example.alarmapp.Activity.CreateNewAlarmActivity;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
 import com.example.alarmapp.Base.Alarm;
-import com.example.alarmapp.Base.RecyclerItemClickListener;
 import com.example.alarmapp.Base.SwipToDeleteAlarm;
 import com.example.alarmapp.Database.AlarmDataBase;
 import com.example.alarmapp.R;
@@ -27,7 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlarmFragment extends Fragment {
+public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.OnItemClickListener{
     private FloatingActionButton fabAdd_Alarm;
     private RecyclerView recyclerView_Alarm;
     private List<Alarm> alarmList;
@@ -51,7 +51,7 @@ public class AlarmFragment extends Fragment {
         alarmList = new ArrayList<>();
         dataBase = new AlarmDataBase(getContext());
         // Tạo và cấu hình RecyclerView
-        adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), alarmList, dataBase);
+        adapter_Alarm = new Alarm_Recycler_Adapter(getContext(), alarmList, dataBase, this);
         recyclerView_Alarm.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView_Alarm.setAdapter(adapter_Alarm);
         // Them vao database khi thoat ra
@@ -61,7 +61,6 @@ public class AlarmFragment extends Fragment {
         // Tạo và thiết lập ItemTouchHelper
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipToDeleteAlarm(adapter_Alarm,this,dataBase));
         itemTouchHelper.attachToRecyclerView(recyclerView_Alarm);
-        setEventRecyclerView();
         return view;
     }
 
@@ -99,18 +98,55 @@ public class AlarmFragment extends Fragment {
 
         }
     }
-    private void setEventRecyclerView(){
-        recyclerView_Alarm.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView_Alarm, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-                Toast.makeText(getContext(),"vxdsfs",Toast.LENGTH_SHORT).show();
-            }
-        }));
+    @Override
+    public void onItemClick(int position) {
+        // Handle item click here
+        Log.i("Tag edit", " editing");
+        showEditAlarmDialog(position);
     }
+
+    private void showEditAlarmDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Sửa báo thức");
+
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.edit_alarm_dialog, null);
+        builder.setView(view);
+
+
+        // Để lấy thời gian của cái đồng hồ vừa nhấn
+        // thiết lập cho thông báo rồi sau đó là thiết lập lại sau khi người dùng nhan
+         EditText editHour = view.findViewById(R.id.edtHour);
+         EditText editMinute = view.findViewById(R.id.edtMinute);
+         EditText editName = view.findViewById(R.id.edtMessage);
+
+        Alarm selectedAlarm = alarmList.get(position);
+         String[] timearray = selectedAlarm.getTime_alarm().split(":");
+        editHour.setText(timearray[0]);
+        editMinute.setText(timearray[1]);
+        editName.setText(selectedAlarm.getMessage());
+
+        builder.setPositiveButton("Lưu", (dialog, which) -> {
+            int newHour = Integer.parseInt(editHour.getText().toString().trim());
+            int newMinute = Integer.parseInt(editMinute.getText().toString().trim());
+            String newName = editName.getText().toString().trim();
+
+            String temptime = formatTime(newHour, newMinute);
+            selectedAlarm.setTime_alarm(temptime);
+            selectedAlarm.setMessage(newName);
+            adapter_Alarm.notifyItemChanged(position);
+
+            dataBase.updateDatabase(selectedAlarm);
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        builder.show();
+    }
+    private String formatTime(int hour, int minute) {
+        return String.format("%02d:%02d", hour, minute);
+    }
+
 
 }

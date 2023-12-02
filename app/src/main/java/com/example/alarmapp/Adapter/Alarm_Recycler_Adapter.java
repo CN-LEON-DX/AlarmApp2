@@ -39,12 +39,14 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
     private TextView tvTime;
     private TextView tvMessage;
     private SwitchCompat switchCompat;
+    private OnItemClickListener onItemClickListener;
 
 
-    public Alarm_Recycler_Adapter(Context context, List<Alarm> alarmList,AlarmDataBase dataBase) {
+    public Alarm_Recycler_Adapter(Context context, List<Alarm> alarmList,AlarmDataBase dataBase, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.alarmList = alarmList;
         this.alarmDataBase=dataBase;
+        this.onItemClickListener = onItemClickListener;
     }
     public Alarm getAlarm(int position){
         return alarmList.get(position);
@@ -83,7 +85,7 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
         int hour = Integer.parseInt(timeArray[0]);
         int minute = Integer.parseInt(timeArray[1]);
         Intent intent = new Intent(context, Broadcast_Alarm_Receiver.class);
-        intent.putExtra("message", alarm.getMessage().trim() + time);
+        intent.putExtra("message", alarm.getMessage().trim() +" " + time);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarm.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
@@ -130,8 +132,13 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
             tvTime = itemView.findViewById(R.id.tvTime);
             tvMessage = itemView.findViewById(R.id.tvMessage);
             switchCompat = itemView.findViewById(R.id.switch_item_alarm);
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && onItemClickListener != null) {
+                    onItemClickListener.onItemClick(position);
+                }
+            });
         }
-
         public void setData(Alarm alarm) {
             if (alarm.getTime_alarm() != null && alarm.getMessage() != null) {
                 tvTime.setText(alarm.getTime_alarm());
@@ -165,16 +172,10 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
         }
 
 
-        public void onClick(View view) {
-            // Handle item click here
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                Alarm clickedAlarm = alarmList.get(position);
-                // Do something with the clicked alarm, e.g., open a new activity or show a dialog
-                Toast.makeText(context, "Item clicked: " + clickedAlarm.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
+    }
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }
+
+
