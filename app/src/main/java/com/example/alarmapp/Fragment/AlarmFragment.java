@@ -1,6 +1,6 @@
 package com.example.alarmapp.Fragment;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,11 +10,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.example.alarmapp.Activity.CreateNewAlarmActivity;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
@@ -63,90 +61,88 @@ public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.
         itemTouchHelper.attachToRecyclerView(recyclerView_Alarm);
         return view;
     }
-
+    private int maxIdAlarm(List<Alarm> list){
+        int maxId= list.get(0).getId();
+        for(int i=1;i<list.size();++i){
+            int idAlarm= list.get(i).getId();
+            if(idAlarm>maxId) maxId=idAlarm;
+        }
+        return maxId;
+    }
     public void initRecyclerViewWhenStart(){
         dataBase.getData(alarmList);
-        idAlarm=alarmList.size()-1;
+        for(Alarm alarm : alarmList){
+            if(alarm.getTurnOn()) alarm.createAlarm(getContext());
+        }
+        if(alarmList.size()>1)
+            idAlarm=maxIdAlarm(alarmList);
         adapter_Alarm.notifyDataSetChanged();
     }
     private void setEventFab(){
         fabAdd_Alarm.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CreateNewAlarmActivity.class);
+            intent.putExtra("requestCode",99);
             startActivityForResult(intent,99);
         });
     }
-
+    private Alarm getDataFromIntentResult(Intent data){
+        String time = data.getStringExtra("timeCreate");
+        String name = data.getStringExtra("nameAlarmCreate");
+        String sound = data.getStringExtra("soundCreate");
+        String repeat= data.getStringExtra("RepeatCreate");
+        boolean isVibrate=data.getBooleanExtra("isVibrateCreate",false);
+        boolean isRepeat = data.getBooleanExtra("isRepeatCreate",false);
+        return new Alarm(time,++idAlarm,true,name,sound,repeat,isVibrate,isRepeat);
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==99&&resultCode==98){
-            String time = data.getStringExtra("time");
-            Log.i("Tag t", time);
-            String name = data.getStringExtra("nameAlarm");
-            Log.i("tag", name);
-            String sound = data.getStringExtra("sound");
-            String repeat= data.getStringExtra("repeat");
-            boolean isVibrate=data.getBooleanExtra("isVibrate",false);
-            boolean isRepeat = data.getBooleanExtra("isRepeat",false);
-            Alarm newAlarm = new Alarm(time,++idAlarm,true,name,sound,repeat,isVibrate,isRepeat);
+        if(requestCode==99&&resultCode==99){
+            Alarm newAlarm = getDataFromIntentResult(data);
+            newAlarm.createAlarm(getContext());
             alarmList.add(0,newAlarm);
-            adapter_Alarm.setAlarm(newAlarm);
             adapter_Alarm.notifyItemInserted(0);
-            // Goi adapter them vào các alarm và thông báo của nó
-            // Ihem database vao !
             dataBase.putData(newAlarm);
-
+        }
+        if(requestCode==98&&resultCode==98){
+            int position =data.getIntExtra("position",-1);
+            if(position!=-1){
+                Alarm newAlarm = getDataFromIntentResult(data);
+                Alarm oldAlarm = alarmList.get(position);
+                oldAlarm.cancelAlarm(getContext());
+                alarmList.get(position).setId(newAlarm.getId());
+                alarmList.get(position).setMessage(newAlarm.getMessage());
+                alarmList.get(position).setTime_alarm(newAlarm.getTime_alarm());
+                alarmList.get(position).setRepeat(newAlarm.getRepeat());
+                alarmList.get(position).setSound(newAlarm.getSound());
+                alarmList.get(position).setTurnOn(newAlarm.getTurnOn());
+                alarmList.get(position).setRepeat(newAlarm.isRepeat());
+                alarmList.get(position).setVibrate(newAlarm.isVibrate());
+                adapter_Alarm.notifyItemChanged(position);
+                newAlarm.createAlarm(getContext());
+                dataBase.updateAlarm(oldAlarm,newAlarm);
+            }
         }
     }
     @Override
     public void onItemClick(int position) {
+        Alarm alarm = alarmList.get(position);
         // Handle item click here
-        Log.i("Tag edit", " editing");
-        showEditAlarmDialog(position);
+        Intent intent = new Intent(getContext(),CreateNewAlarmActivity.class);
+        intent.putExtra("requestCode",98);
+        intent.putExtra("position",position);
+        intent.putExtra("sound",alarm.getSound());
+        intent.putExtra("isRepeat",alarm.isRepeat());
+        intent.putExtra("isVibrate",alarm.isVibrate());
+        intent.putExtra("repeat",alarm.getRepeat());
+        intent.putExtra("nameAlarm", alarm.getMessage());
+        intent.putExtra("time", alarm.getTime_alarm());
+        startActivityForResult(intent,98);
     }
 
-    private void showEditAlarmDialog(int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Sửa báo thức");
-
-        View view = LayoutInflater.from(requireContext()).inflate(R.layout.edit_alarm_dialog, null);
-        builder.setView(view);
-
-
-        // Để lấy thời gian của cái đồng hồ vừa nhấn
-        // thiết lập cho thông báo rồi sau đó là thiết lập lại sau khi người dùng nhan
-         EditText editHour = view.findViewById(R.id.edtHour);
-         EditText editMinute = view.findViewById(R.id.edtMinute);
-         EditText editName = view.findViewById(R.id.edtMessage);
-
-        Alarm selectedAlarm = alarmList.get(position);
-         String[] timearray = selectedAlarm.getTime_alarm().split(":");
-        editHour.setText(timearray[0]);
-        editMinute.setText(timearray[1]);
-        editName.setText(selectedAlarm.getMessage());
-
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
-            int newHour = Integer.parseInt(editHour.getText().toString().trim());
-            int newMinute = Integer.parseInt(editMinute.getText().toString().trim());
-            String newName = editName.getText().toString().trim();
-
-            String temptime = formatTime(newHour, newMinute);
-            selectedAlarm.setTime_alarm(temptime);
-            selectedAlarm.setMessage(newName);
-            adapter_Alarm.notifyItemChanged(position);
-
-            dataBase.updateDatabase(selectedAlarm);
-        });
-
-        builder.setNegativeButton("Hủy", (dialog, which) -> {
-            dialog.cancel();
-        });
-
-        builder.show();
-    }
+    @SuppressLint("DefaultLocale")
     private String formatTime(int hour, int minute) {
         return String.format("%02d:%02d", hour, minute);
     }
-
 
 }

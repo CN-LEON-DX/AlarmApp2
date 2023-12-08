@@ -1,17 +1,25 @@
 package com.example.alarmapp.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alarmapp.Adapter.ViewPagerAdapter;
 import com.example.alarmapp.R;
@@ -21,7 +29,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class Main_AlarmActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
-    private SharedPreferences sharedPreferencesPut;
     private ViewPagerAdapter viewPagerAdapter;
     private Button btnSetting;
     private ImageView imageSetting;
@@ -52,7 +59,15 @@ public class Main_AlarmActivity extends AppCompatActivity {
         setEventImageSetting();
         //set event btn setting
         setEventButtonSetting();
+        requestPermission();
     }
+    private void requestPermission(){
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS);
+        if(permission!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(Main_AlarmActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
+        }
+    }
+
     //
     private void setEventForTabLayout(){
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

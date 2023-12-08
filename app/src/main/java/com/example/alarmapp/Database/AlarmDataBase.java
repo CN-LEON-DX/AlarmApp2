@@ -66,7 +66,7 @@ public class AlarmDataBase extends SQLiteOpenHelper {
             if(cursor!=null){
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
-                        int id = list.size() + 1;
+                        int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID_NAME));
                         String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
                         String message = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE));
                         int status = cursor.getInt(cursor.getColumnIndex(COLUMN_STATUS));
@@ -87,7 +87,6 @@ public class AlarmDataBase extends SQLiteOpenHelper {
         }
     }
     public void putData(@NonNull Alarm alarm){
-        Log.i("Tag put database:", " you just add");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_ID_NAME, alarm.getId());
@@ -103,21 +102,23 @@ public class AlarmDataBase extends SQLiteOpenHelper {
     }
     public void deleteData(Alarm alarm){
         SQLiteDatabase db = this.getReadableDatabase();
+        Log.i("tag_id","id:"+alarm.getId());
         db.delete(TABLE_NAME,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(alarm.getId())});
         db.close();
     }
-    public void updateDatabase(Alarm alarm){
-        SQLiteDatabase db = this.getReadableDatabase();
+    public void updateAlarm(Alarm oldAlarm, Alarm newalarm){
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID_NAME, alarm.getId());
-        contentValues.put(COLUMN_TIME,alarm.getTime_alarm());
-        contentValues.put(COLUMN_MESSAGE,alarm.getMessage());
-        contentValues.put(COLUMN_STATUS,isTrue(alarm.getTurnOn()));
-        contentValues.put(COLUMN_REPEAT,alarm.getRepeat());
-        contentValues.put(COLUMN_SOUND,alarm.getSound());
-        contentValues.put(COLUMN_IS_VIBRATE,isTrue(alarm.isVibrate()));
-        contentValues.put(COLUMN_IS_VIBRATE,isTrue(alarm.isRepeat()));
-        db.update(TABLE_NAME,contentValues,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(alarm.getId())});
+        contentValues.put(COLUMN_ID_NAME, newalarm.getId());
+        contentValues.put(COLUMN_TIME,newalarm.getTime_alarm());
+        contentValues.put(COLUMN_MESSAGE,newalarm.getMessage());
+        contentValues.put(COLUMN_STATUS,isTrue(newalarm.getTurnOn()));
+        contentValues.put(COLUMN_REPEAT,newalarm.getRepeat());
+        contentValues.put(COLUMN_SOUND,newalarm.getSound());
+        contentValues.put(COLUMN_IS_VIBRATE,isTrue(newalarm.isVibrate()));
+        contentValues.put(COLUMN_IS_REPEAT,isTrue(newalarm.isRepeat()));
+        db.update(TABLE_NAME,contentValues,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(oldAlarm.getId())});
+        db.close();
     }
     public void updateStatusSwitch(Alarm alarm){
         SQLiteDatabase db = this.getReadableDatabase();

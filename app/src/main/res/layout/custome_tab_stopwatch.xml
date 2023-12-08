@@ -8,4 +8,4 @@
     android:fontFamily="@font/lato_bold"
     android:text="Bấm giờ"
     android:textColor="@color/white"
-    android:textSize="14sp" /> <!-- Màu đỏ cho ví dụ -->
+    android:textSize="16sp" /> <!-- Màu đỏ cho ví dụ -->

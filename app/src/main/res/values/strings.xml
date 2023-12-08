@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AlarmApp</string>
+    <string name="app_name">Đồng hồ</string>
     <string name="add_new_alarm">Add New Alarm</string>
     <string name="s_a">Sửa</string>
     <string name="b_o_th_c">Báo thức</string>
@@ -17,4 +17,5 @@
     <string name="formatDate">EEEE, dd/MM/yyyy</string>
     <string name="notifyUserSelectedThisCity">bạn đã chọn thành phố này</string>
     <string name="repeatOneTime">chỉ một lần</string>
+    <string name="bao_thuc">Báo thức</string>
 </resources>

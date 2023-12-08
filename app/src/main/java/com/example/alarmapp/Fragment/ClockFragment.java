@@ -1,12 +1,19 @@
 package com.example.alarmapp.Fragment;
 
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class ClockFragment extends Fragment{
 
@@ -40,6 +48,18 @@ public class ClockFragment extends Fragment{
     private WatchTimeCityDatabase database;
     private Clock_Recycler_Adapter clockRecyclerAdapter;
     private RecyclerView recyclerView_Clock;
+    private TextClock textClock;
+    private boolean isFormat;
+    private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.example.ACTION_SEND_DATA".equals(intent.getAction())) {
+                isFormat = intent.getBooleanExtra("isFormat",false);
+                Log.d("tag",String.valueOf(isFormat));
+                Toast.makeText(getContext(),String.valueOf(isFormat),Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
     public ClockFragment() {
         // Required empty public constructor
     }
@@ -52,6 +72,16 @@ public class ClockFragment extends Fragment{
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter("com.example.ACTION_SEND_DATA");
+        getContext().registerReceiver(dataReceiver,intentFilter);
+        if(isFormat)
+            textClock.setFormat24Hour("HH:mm:ss");
+        else textClock.setFormat24Hour("HH:mm");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -60,6 +90,7 @@ public class ClockFragment extends Fragment{
         recyclerView_Clock = view.findViewById(R.id.rcvList_Clock);
         fabAdd_Clock = view.findViewById(R.id.fabAddClock);
         tvDate =view.findViewById(R.id.tv_date);
+        textClock= view.findViewById(R.id.textClock);
         //initialize object
         clockList = new ArrayList<>();
         database= new WatchTimeCityDatabase(getContext());
@@ -76,6 +107,12 @@ public class ClockFragment extends Fragment{
         //set event delete item
         setEventDeleteItemRecyclerView();
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Objects.requireNonNull(requireContext()).unregisterReceiver(dataReceiver);
     }
 
     public void initRecyclerViewWhenStart(){
@@ -99,7 +136,14 @@ public class ClockFragment extends Fragment{
             startActivityForResult(intent,99);
         });
     }
-
+    private boolean isItemExists(String city){
+        for(Clock clockFromList : clockList){
+            if (clockFromList.getCity().equals(city)) {
+                return  true;
+            }
+        }
+        return false;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -108,13 +152,9 @@ public class ClockFragment extends Fragment{
             String city=data.getStringExtra("city");
             String timeDifferences=data.getStringExtra("timeDifferences");
             String timeZone = data.getStringExtra("timeZone");
-            boolean isSelected =false;
-            for(Clock clockFromList : clockList){
-                if (clockFromList.getCity().equals(city)) {
-                    isSelected = true;
-                    break;
-                }
-            }
+            boolean isDefault= data.getBooleanExtra("isDefault",false);
+            boolean isSelected =isItemExists(city);
+
             if(!isSelected){
                 database.putData(new Clock(city,timeDifferences,timeZone));
                 clock.setCity(city);
@@ -155,12 +195,13 @@ public class ClockFragment extends Fragment{
         builder.setPositiveButton("không",(dialog, which) ->{clockRecyclerAdapter.notifyItemChanged(position);});
         builder.setNegativeButton("xác nhận",(dialog, which) ->
         {
-            clockList.remove(position-1);
+            clockList.remove(position);
             clockRecyclerAdapter.notifyItemRemoved(position);
-            Clock clock = clockList.get(position-1);
+            Clock clock = clockList.get(position);
             database.deleteData(clock);
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
 }

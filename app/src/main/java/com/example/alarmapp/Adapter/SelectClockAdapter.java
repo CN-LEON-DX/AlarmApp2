@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.example.alarmapp.Base.Clock;
@@ -21,11 +23,13 @@ import java.util.List;
 public class SelectClockAdapter extends ArrayAdapter<Clock> {
     private final List<Clock> listSelectClock;
     private List<Clock> originalList;
+    private Context context;
 
     public SelectClockAdapter(Context context, List<Clock> listSelectClock) {
         super(context, 0, listSelectClock);
         this.listSelectClock = listSelectClock;
         this.originalList = new ArrayList<>(listSelectClock);
+        this.context=context;
     }
 
 
@@ -85,6 +89,7 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
                 clear();
                 addAll((List<Clock>) results.values);
                 notifyDataSetChanged();
+                if(((List<Clock>) results.values).isEmpty()) Toast.makeText(context,"khong co thanh pho ban tim kiem",Toast.LENGTH_SHORT).show();
             }
         };
     }

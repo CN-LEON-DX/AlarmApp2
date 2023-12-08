@@ -7,13 +7,12 @@ import androidx.appcompat.widget.SwitchCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +21,8 @@ import com.example.alarmapp.R;
 
 public class CreateNewAlarmActivity extends AppCompatActivity {
     private EditText edtHour, edtMinute;
-    private RelativeLayout layoutNameAlarm,layoutrepeat,layoutSound;
-    private TextView tvNameAlarm,tvrepeat,tvSound;
+    private RelativeLayout layoutNameAlarm,layoutRepeat,layoutSound;
+    private TextView tvNameAlarm,tvRepeat,tvSound;
     private ImageView imageViewBack, imgSave;
     private SwitchCompat switchVibrate,switchRepeat;
     @Override
@@ -34,34 +33,55 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         edtMinute = findViewById(R.id.tvMinute);
         edtHour = findViewById(R.id.tvHour);
         layoutNameAlarm = findViewById(R.id.layout_nameAlarm);
-        layoutrepeat = findViewById(R.id.layout_repeat);
+        layoutRepeat = findViewById(R.id.layout_repeat);
         layoutSound = findViewById(R.id.layout_selectSound);
-        tvrepeat = findViewById(R.id.tv_repeat);
+        tvRepeat = findViewById(R.id.tvRepeat_itemAlarm);
         tvNameAlarm=findViewById(R.id.tv_nameAlarm);
         tvSound=findViewById(R.id.tv_sound);
         imageViewBack= findViewById(R.id.img_cancel_activity);
         imgSave = findViewById(R.id.img_saveNewAlarm);
         switchVibrate=findViewById(R.id.switch_vibrate);
         switchRepeat = findViewById(R.id.switch_repeat);
+
+        Intent intent = getIntent();
+        int requestCode=intent.getIntExtra("requestCode",-1);
+        updateUIWhenRequestCode98(requestCode,intent);
         //
-        setEventForLayoutNameAlarm();
+        setEventForLayoutNameAlarm(requestCode,intent);
         //
-        setEventLayoutrepeat();
+        setEventLayoutRepeat(requestCode,intent);
         //
-        setEventForLayoutSelectSound();
+        setEventForLayoutSelectSound(requestCode,intent);
         //
         backLayout();
-        save();
+        save(requestCode);
+        deniedEnterEditText(edtHour);
+        deniedEnterEditText(edtMinute);
     }
-    private void setEventForLayoutNameAlarm(){
+    private void updateUIWhenRequestCode98(int requestCode,Intent intent){
+        if (requestCode==98){
+            String[] time = intent.getStringExtra("time").split(":");
+            edtHour.setText(String.valueOf(time[0]));
+            edtMinute.setText(String.valueOf(time[1]));
+            switchRepeat.setChecked(intent.getBooleanExtra("isRepeat",false));
+            switchVibrate.setChecked(intent.getBooleanExtra("isVibrate",false));
+        }
+    }
+    //set event name Alarm
+    private void setEventForLayoutNameAlarm(int requestCode,Intent intent){
+        final EditText input = new EditText(this);
+        deniedEnterEditText(input);
+        if(requestCode==98) {
+            String nameAlarm = intent.getStringExtra("nameAlarm");
+            tvNameAlarm.setText(nameAlarm);
+        }
         layoutNameAlarm.setOnClickListener(v -> {
-            showDialogInputNameAlarm();
+            showDialogInputNameAlarm(input);
         });
     }
-    private void showDialogInputNameAlarm(){
+    private void showDialogInputNameAlarm(EditText input){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Tên báo thức");
-        final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("OK", (dialog, which) -> {
             String userInput = input.getText().toString();
@@ -69,56 +89,102 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             tvNameAlarm.setText(userInput);
         });
         builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
-
         builder.show();
     }
-    private void setEventLayoutrepeat(){
-        layoutrepeat.setOnClickListener(v->{
-            showDialogrepeat();
+    private void checkRepeat(String day,boolean[] checkedItem){
+        switch (day){
+            case "thứ 2":
+                checkedItem[0]=true;
+                break;
+            case "thứ 3":
+                checkedItem[1]=true;
+                break;
+            case "thứ 4":
+                checkedItem[2]=true;
+                break;
+            case "thứ 5":
+                checkedItem[3]=true;
+                break;
+            case "thứ 6":
+                checkedItem[4]=true;
+                break;
+            case "thứ 7":
+                checkedItem[5]=true;
+                break;
+            case "chủ nhật":
+                checkedItem[6]=true;
+                break;
+            case "mỗi ngày":
+                checkedItem[0]=true;
+                checkedItem[1]=true;
+                checkedItem[2]=true;
+                checkedItem[3]=true;
+                checkedItem[4]=true;
+                checkedItem[5]=true;
+                checkedItem[6]=true;
+                break;
+        }
+    }
+    private boolean[] initCheckedItem(int requestCode,Intent intent){
+        boolean[] checkedItems = new boolean[]{false, false, false, false, false, false, false};
+        if(requestCode==98){
+            String repeatAlarm = intent.getStringExtra("repeat");
+            tvRepeat.setText(repeatAlarm);
+            String[] listRepeatItem = repeatAlarm.split(", ");
+            for(int i=0;i<listRepeatItem.length;++i){
+                checkRepeat(listRepeatItem[i],checkedItems);
+            }
+        }
+        return checkedItems;
+    }
+    private void setEventLayoutRepeat(int requestCode,Intent intent){
+        boolean[] checkedItems = initCheckedItem(requestCode,intent);
+        layoutRepeat.setOnClickListener(v->{
+            showDialogRepeat(checkedItems);
         });
     }
-    private void showDialogrepeat() {
+    private void showDialogRepeat(boolean[] checkedItems) {
         final StringBuilder result = new StringBuilder();
-        final boolean[] checkedItems = new boolean[]{false, false, false, false, false, false, false};
         String[] options = {"thứ 2", "thứ 3", "thứ 4", "thứ 5", "thứ 6", "thứ 7", "chủ nhật"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Lặp lại");
         builder.setMultiChoiceItems(options, checkedItems, (dialog, which, isChecked) -> {
-            // Cập nhật trạng thái chọn của mỗi mục
             checkedItems[which] = isChecked;
         });
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            // Xử lý khi người dùng bấm nút OK
-            result.setLength(0); // Xóa chuỗi kết quả trước khi cập nhật
-
-            for (int i = 0; i < checkedItems.length; i++) {
-                if (checkedItems[i]) {
+            result.setLength(0);
+            for (int i = 0; i < checkedItems.length; i++)
+                if (checkedItems[i])
                     result.append(options[i]).append(", ");
-                }
+
+            if(isAllItemTrue(checkedItems)) {
+                tvRepeat.setText("mỗi ngày");
+                return;
             }
 
-            // Kiểm tra xem có ít nhất một tùy chọn nào được chọn trước khi cập nhật TextView
             if (result.length() > 0) {
-                // Loại bỏ dấu ',' cuối cùng và cập nhật TextView
-                tvrepeat.setText(result.substring(0, result.length() - 2));
+                tvRepeat.setText(result.substring(0, result.length() - 2));
             } else {
-                // Không có tùy chọn nào được chọn
-                tvrepeat.setText("chỉ một lần");
+                tvRepeat.setText("chỉ một lần");
             }
         });
 
-        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
-    private void setEventForLayoutSelectSound(){
+    private boolean isAllItemTrue(boolean[] checkedItem){
+        for(int i=0;i<checkedItem.length;++i){
+            if(!checkedItem[i]) return false;
+        }
+        return true;
+    }
+    private void setEventForLayoutSelectSound(int requestCode,Intent intent){
+        if(requestCode==98){
+            tvSound.setText(intent.getStringExtra("sound"));
+        }
         layoutSound.setOnClickListener(v -> {
             showDialogSelectSound();
         });
@@ -144,11 +210,10 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             }
         });
     }
-    private void save() {
+    private void save(int requestCode) {
         imgSave.setOnClickListener(v -> {
             String hour = edtHour.getText().toString();
             String minute = edtMinute.getText().toString();
-            String nameAlarm = tvNameAlarm.getText().toString();
 
             int intHour = parseValue(hour);
             int intMinute = parseValue(minute);
@@ -159,7 +224,8 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             }
 
             String formattedTime = formatTime(intHour, intMinute);
-            result( formattedTime);
+            if(requestCode==99) result( formattedTime,99);
+            else if(requestCode==98) result( formattedTime,98);
         });
     }
 
@@ -179,16 +245,21 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         return String.format("%02d:%02d", hour, minute);
     }
 
-    private void result( String time) {
+    private void result( String time,int resultCode) {
+        Intent intentChange = getIntent();
         Intent intent = new Intent(CreateNewAlarmActivity.this, AlarmFragment.class);
-        intent.putExtra("sound",tvSound.getText());
-        intent.putExtra("isRepeat",switchRepeat.isChecked());
-        intent.putExtra("isVibrate",switchVibrate.isChecked());
-        intent.putExtra("repeat",tvrepeat.getText());
-        intent.putExtra("nameAlarm", tvNameAlarm.getText());
-        intent.putExtra("time", time);
-        setResult(98, intent);
+        if(resultCode==98) intent.putExtra("position",intentChange.getIntExtra("position",-1));
+        intent.putExtra("soundCreate",tvSound.getText());
+        intent.putExtra("isRepeatCreate",switchRepeat.isChecked());
+        intent.putExtra("isVibrateCreate",switchVibrate.isChecked());
+        intent.putExtra("RepeatCreate",tvRepeat.getText());
+        intent.putExtra("nameAlarmCreate", tvNameAlarm.getText());
+        intent.putExtra("timeCreate", time);
+        setResult(resultCode, intent);
         finish();
     }
-
+    private void deniedEnterEditText(TextView textView){
+        textView.setSingleLine(true);
+        textView.setOnKeyListener((v, keyCode, event) -> keyCode==KeyEvent.KEYCODE_ENTER);
+    }
 }

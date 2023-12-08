@@ -10,6 +10,8 @@
     <color name="colorAccent">#0000FF</color> <!-- Màu thanh dưới tab -->
 
 
-    <color name="turn_on_color_alarm">#2C97EC</color>
-    <color name="turn_off_color_alarm">#777474</color>
+    <color name="turnOnAlarm">#DDD4D4</color>
+    <color name="turnOffAlarm">#3C3C3C</color>
+    <color name="turnOnMessageAlarm">#208DE4</color>
+    <color name="turnOffMessageAlarm">#0C3353</color>
 </resources>

@@ -6,10 +6,13 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,6 +48,8 @@ public class SettingActivity extends AppCompatActivity {
         setEventForLayoutNumberOfIteration();
         //
         readDataFromSharedPreferences();
+        //
+        setEventSwitchFormatClock();
     }
     private void readDataFromSharedPreferences(){
         sharedPreferences = getSharedPreferences("sharedPrefsSetting", Context.MODE_PRIVATE);
@@ -101,5 +106,13 @@ public class SettingActivity extends AppCompatActivity {
         });
         builder.setPositiveButton("Hủy", (dialog, which) -> {dialog.cancel();});
         builder.show();
+    }
+    private void setEventSwitchFormatClock(){
+        switchFormatClock.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Intent intent = new Intent("com.example.ACTION_SEND_DATA");
+            intent.putExtra("isFormat", switchFormatClock.isChecked());
+            Log.i("Tag_Format_clock",String.valueOf(isChecked));
+            sendBroadcast(intent);
+        });
     }
 }

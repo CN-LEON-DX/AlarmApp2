@@ -46,7 +46,7 @@ public class Clock {
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
     }
-    public String calculateTime(String timeZone){
+    public static String calculateTime(String timeZone){
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
         Date currentDate =calendar.getTime();
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("HH:mm");

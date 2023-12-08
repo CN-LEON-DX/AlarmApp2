@@ -58,7 +58,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         app:switchMinWidth="50dp"
-        app:thumbTint="@color/thumb_tint_switch"
+        android:thumbTint="@color/thumb_tint_switch"
         app:trackTint="@color/track_tint_switch" />
 
     <TextView
@@ -81,7 +81,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         app:switchMinWidth="50dp"
-        app:thumbTint="@color/thumb_tint_switch"
+        android:thumbTint="@color/thumb_tint_switch"
         app:trackTint="@color/track_tint_switch" />
 
     <RelativeLayout
@@ -128,7 +128,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_repeat"
+            android:id="@+id/tvRepeat_itemAlarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_titleLapLai"
@@ -180,6 +180,7 @@
             android:maxLength="2"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:lines="1"
             android:textSize="40sp" />
 
         <TextView
@@ -190,6 +191,7 @@
             android:layout_marginTop="9dp"
             android:text=":"
             android:textColor="@color/white"
+            android:lines="1"
             android:textSize="40dp" />
 
         <EditText
@@ -203,6 +205,7 @@
             android:maxLength="2"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:lines="1"
             android:textSize="40dp" />
     </RelativeLayout>
     </RelativeLayout>
