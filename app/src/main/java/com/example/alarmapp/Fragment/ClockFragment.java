@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,35 +50,17 @@ public class ClockFragment extends Fragment{
     private Clock_Recycler_Adapter clockRecyclerAdapter;
     private RecyclerView recyclerView_Clock;
     private TextClock textClock;
-    private boolean isFormat;
-    private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if ("com.example.ACTION_SEND_DATA".equals(intent.getAction())) {
-                isFormat = intent.getBooleanExtra("isFormat",false);
-                Log.d("tag",String.valueOf(isFormat));
-                Toast.makeText(getContext(),String.valueOf(isFormat),Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
+    private SharedPreferences sharedPreferences;
     public ClockFragment() {
         // Required empty public constructor
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        IntentFilter intentFilter = new IntentFilter("com.example.ACTION_SEND_DATA");
-        getContext().registerReceiver(dataReceiver,intentFilter);
-        if(isFormat)
-            textClock.setFormat24Hour("HH:mm:ss");
+        sharedPreferences = getContext().getSharedPreferences("app",Context.MODE_PRIVATE);
+        boolean isFormat = sharedPreferences.getBoolean("isFormatClock",false);
+        if (isFormat) textClock.setFormat24Hour("HH:mm:ss");
         else textClock.setFormat24Hour("HH:mm");
     }
 
@@ -112,7 +95,10 @@ public class ClockFragment extends Fragment{
     @Override
     public void onStop() {
         super.onStop();
-        Objects.requireNonNull(requireContext()).unregisterReceiver(dataReceiver);
+        sharedPreferences = getContext().getSharedPreferences("sharedPrefsClock",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //editor.putBoolean("isFormat",);
+        editor.apply();
     }
 
     public void initRecyclerViewWhenStart(){

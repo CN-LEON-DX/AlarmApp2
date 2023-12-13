@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.alarmapp.Fragment.ClockFragment;
 import com.example.alarmapp.R;
 
 public class SettingActivity extends AppCompatActivity {

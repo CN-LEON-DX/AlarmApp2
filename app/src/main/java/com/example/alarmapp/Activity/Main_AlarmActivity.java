@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,10 +22,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alarmapp.Adapter.ViewPagerAdapter;
+import com.example.alarmapp.Fragment.ClockFragment;
 import com.example.alarmapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -34,6 +40,27 @@ public class Main_AlarmActivity extends AppCompatActivity {
     private ImageView imageSetting;
     private  ViewPager2 viewPager;
     private TextView tvEdit;
+    private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.example.ACTION_SEND_DATA".equals(intent.getAction())) {
+                Fragment clockFragment = viewPagerAdapter.createFragment(1);
+                View fragmentView = clockFragment.getView();
+                if (fragmentView != null) {
+                    TextClock textClock = fragmentView.findViewById(R.id.textClock);
+                    boolean isFormat = intent.getBooleanExtra("isFormat", false);
+
+                    if (isFormat) textClock.setFormat24Hour("HH:mm:ss");
+                    else textClock.setFormat24Hour("HH:mm");
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("app", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isFormatClock",isFormat);
+                    editor.apply();
+                }else Toast.makeText(Main_AlarmActivity.this,"null",Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +77,6 @@ public class Main_AlarmActivity extends AppCompatActivity {
             initialize object
         */
         viewPagerAdapter = new ViewPagerAdapter(this);
-
         // set event change Fragment of View Pager
         setEventChangeFragmentForViewPager();
         // set event for tabLayout
@@ -60,6 +86,13 @@ public class Main_AlarmActivity extends AppCompatActivity {
         //set event btn setting
         setEventButtonSetting();
         requestPermission();
+        IntentFilter intentFilter = new IntentFilter("com.example.ACTION_SEND_DATA");
+        registerReceiver(dataReceiver,intentFilter);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(dataReceiver);
     }
     private void requestPermission(){
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS);

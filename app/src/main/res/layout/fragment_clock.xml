@@ -35,8 +35,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
-            android:format24Hour="HH:mm"/>
+            android:textSize="40sp" />
     </RelativeLayout>
 
     <View
