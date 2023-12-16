@@ -1,6 +1,6 @@
 package com.example.alarmapp.Adapter;
 
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import com.example.alarmapp.Base.Clock;
 import com.example.alarmapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Adapter.ClockViewHolder> {
 
@@ -24,15 +23,15 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
         super(new DiffUtil.ItemCallback<Clock>() {
             @Override
             public boolean areItemsTheSame(@NonNull Clock oldItem, @NonNull Clock newItem) {
-                String timeOld = oldItem.calculateTime(oldItem.getTimeZone());
-                String timeNew = newItem.calculateTime(newItem.getTimeZone());
+                String timeOld = Clock.calculateTime(oldItem.getTimeZone());
+                String timeNew = Clock.calculateTime(newItem.getTimeZone());
                 return timeNew.equals(timeOld);
             }
 
             @Override
             public boolean areContentsTheSame(@NonNull Clock oldItem, @NonNull Clock newItem) {
-                String timeOld = oldItem.calculateTime(oldItem.getTimeZone());
-                String timeNew = newItem.calculateTime(newItem.getTimeZone());
+                String timeOld = Clock.calculateTime(oldItem.getTimeZone());
+                String timeNew = Clock.calculateTime(newItem.getTimeZone());
                 return timeNew.equals(timeOld);
             }
         });
@@ -50,11 +49,6 @@ public class Clock_Recycler_Adapter extends ListAdapter<Clock, Clock_Recycler_Ad
     @Override
     public void onBindViewHolder(@NonNull ClockViewHolder holder, int position) {
         holder.setData(getItem(position));
-    }
-    public void deleteItem(int position){
-        ArrayList<Clock> currentList = new ArrayList<>(getCurrentList());
-        currentList.remove(position);
-        notifyDataSetChanged();
     }
     public ArrayList<Clock> getList(){
         return new ArrayList<>(getCurrentList());

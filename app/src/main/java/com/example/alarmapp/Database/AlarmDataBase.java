@@ -7,14 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.util.Printer;
 
 import androidx.annotation.NonNull;
 
 import com.example.alarmapp.Base.Alarm;
-import com.example.alarmapp.Base.StopWatch;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AlarmDataBase extends SQLiteOpenHelper {
@@ -52,7 +49,7 @@ public class AlarmDataBase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
     private boolean isTrue(int index){
-       return index==1?true:false;
+       return index == 1;
     }
     private int isTrue(boolean index){
         return index?1:0;
@@ -64,21 +61,20 @@ public class AlarmDataBase extends SQLiteOpenHelper {
             String[] projection ={COLUMN_ID_NAME, COLUMN_TIME,COLUMN_MESSAGE, COLUMN_STATUS,COLUMN_SOUND,COLUMN_REPEAT,COLUMN_IS_VIBRATE,COLUMN_IS_REPEAT};
             Cursor cursor = db.query(TABLE_NAME,projection,null,null,null,null,null);
             if(cursor!=null){
-                if (cursor != null) {
-                    while (cursor.moveToNext()) {
-                        int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID_NAME));
-                        String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
-                        String message = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE));
-                        int status = cursor.getInt(cursor.getColumnIndex(COLUMN_STATUS));
-                        String repeat = cursor.getString(cursor.getColumnIndex(COLUMN_REPEAT));
-                        String sound = cursor.getString(cursor.getColumnIndex(COLUMN_SOUND));
-                        int vibrate = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_VIBRATE));
-                        int isRepeat = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_REPEAT));
-                        Alarm alarm = new Alarm(time, id, isTrue(status), message, sound, repeat, isTrue(vibrate), isTrue(isRepeat));
-                        list.add(0, alarm);
-                    }
-                    cursor.close();
+                while (cursor.moveToNext()) {
+                    int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID_NAME));
+                    String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
+                    String message = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE));
+                    int status = cursor.getInt(cursor.getColumnIndex(COLUMN_STATUS));
+                    String repeat = cursor.getString(cursor.getColumnIndex(COLUMN_REPEAT));
+                    String sound = cursor.getString(cursor.getColumnIndex(COLUMN_SOUND));
+                    int vibrate = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_VIBRATE));
+                    int isRepeat = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_REPEAT));
+                    Alarm alarm = new Alarm(time, id, isTrue(status), message, sound, repeat, isTrue(vibrate), isTrue(isRepeat));
+                    list.add(0, alarm);
                 }
+                cursor.close();
+
 
             }
             db.close();

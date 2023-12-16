@@ -18,4 +18,6 @@
     <string name="notifyUserSelectedThisCity">bạn đã chọn thành phố này</string>
     <string name="repeatOneTime">chỉ một lần</string>
     <string name="bao_thuc">Báo thức</string>
+    <string name="No">Không</string>
+    <string name="accept">xác nhận</string>
 </resources>

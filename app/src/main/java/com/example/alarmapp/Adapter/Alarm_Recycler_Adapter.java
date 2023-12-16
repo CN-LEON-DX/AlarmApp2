@@ -19,10 +19,10 @@ import com.example.alarmapp.R;
 import java.util.List;
 
 public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_Adapter.AlarmViewHolder> {
-    private List<Alarm> alarmList;
-    private Context context;
-    private AlarmDataBase alarmDataBase;
-    private OnItemClickListener onItemClickListener;
+    private final List<Alarm> alarmList;
+    private final Context context;
+    private final AlarmDataBase alarmDataBase;
+    private final OnItemClickListener onItemClickListener;
 
 
     public Alarm_Recycler_Adapter(Context context, List<Alarm> alarmList,AlarmDataBase dataBase, OnItemClickListener onItemClickListener) {
@@ -65,10 +65,10 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
     **/
 
     class AlarmViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTime;
-        private TextView tvMessage;
-        private SwitchCompat switchCompat;
-        private TextView tvRepeat;
+        private final TextView tvTime;
+        private final TextView tvMessage;
+        private final SwitchCompat switchCompat;
+        private final TextView tvRepeat;
         public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTime = itemView.findViewById(R.id.tvTime_itemAlarm);

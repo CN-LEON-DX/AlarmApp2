@@ -5,19 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.alarmapp.Fragment.ClockFragment;
 import com.example.alarmapp.R;
 
 public class SettingActivity extends AppCompatActivity {
@@ -112,7 +106,6 @@ public class SettingActivity extends AppCompatActivity {
         switchFormatClock.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Intent intent = new Intent("com.example.ACTION_SEND_DATA");
             intent.putExtra("isFormat", switchFormatClock.isChecked());
-            Log.i("Tag_Format_clock",String.valueOf(isChecked));
             sendBroadcast(intent);
         });
     }

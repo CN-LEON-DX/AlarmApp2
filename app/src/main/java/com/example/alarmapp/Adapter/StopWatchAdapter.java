@@ -15,8 +15,8 @@ import com.example.alarmapp.R;
 import java.util.List;
 
 public class StopWatchAdapter extends RecyclerView.Adapter<StopWatchAdapter.StopWatchViewHolder>{
-    private List<StopWatch> stopWatchList;
-    private Context context;
+    private final List<StopWatch> stopWatchList;
+    private final Context context;
 
     public StopWatchAdapter(List<StopWatch> stopWatchList, Context context) {
         this.stopWatchList = stopWatchList;
@@ -39,8 +39,10 @@ public class StopWatchAdapter extends RecyclerView.Adapter<StopWatchAdapter.Stop
     public int getItemCount() {
         return stopWatchList.isEmpty() ? 0 : stopWatchList.size();
     }
-    class StopWatchViewHolder extends RecyclerView.ViewHolder{
-        private TextView tvIndexOf, tvTimeRecord, tvTimeAdd;
+    static class StopWatchViewHolder extends RecyclerView.ViewHolder{
+        private final TextView tvIndexOf;
+        private final TextView tvTimeRecord;
+        private final TextView tvTimeAdd;
         public StopWatchViewHolder(@NonNull View itemView) {
             super(itemView);
             tvIndexOf = itemView.findViewById(R.id.tvIndexOf);

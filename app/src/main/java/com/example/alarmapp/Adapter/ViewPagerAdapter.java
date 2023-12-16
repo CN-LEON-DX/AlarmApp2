@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
-    private List<Fragment> fragments;
+    private final List<Fragment> fragments;
 
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -23,8 +23,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         fragments.add(new ClockFragment());
         fragments.add(new StopWatchFragment());
     }
-
-    // ... Các phương thức khác
 
     @NonNull
     @Override

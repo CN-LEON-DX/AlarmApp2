@@ -7,12 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.alarmapp.Base.Clock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WatchTimeCityDatabase extends SQLiteOpenHelper {
@@ -74,40 +72,6 @@ public class WatchTimeCityDatabase extends SQLiteOpenHelper {
     public void deleteData(Clock clock){
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(TABLE_NAME,COLUMN_CITY+"=?",new String[]{clock.getCity()});
-        db.close();
-    }
-    public void deleteData(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(TABLE_NAME,null,null);
-        db.close();
-    }
-    @SuppressLint("Range")
-    public Clock selectData(String nameCity){
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] projection={COLUMN_ID,COLUMN_CITY,COLUMN_TIME_DIFFERENCES,COLUMN_TIMEZONE};
-        Cursor cursor = db.query(TABLE_NAME,projection,COLUMN_CITY+"=?",new String[]{nameCity},null,null,null);
-        Clock clock=null;
-        if(cursor!=null&&cursor.moveToFirst()){
-            clock = new Clock();
-            clock.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
-            clock.setTimeDifferences(cursor.getString(cursor.getColumnIndex(COLUMN_TIME_DIFFERENCES)));
-            clock.setTimeZone(cursor.getString(cursor.getColumnIndex(COLUMN_TIMEZONE)));
-            db.close();
-        }
-        return clock;
-    }
-    public void updateDataTimeZone(@NonNull Clock clock){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_TIMEZONE,clock.getTimeZone());
-        db.update(TABLE_NAME,values,COLUMN_CITY+"=?",new String[]{clock.getCity()});
-        db.close();
-    }
-    public void updateDataTimeDifferences(Clock clock){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_TIME_DIFFERENCES,clock.getTimeDifferences());
-        db.update(TABLE_NAME,values,COLUMN_CITY+"=?",new String[]{clock.getCity()});
         db.close();
     }
 }

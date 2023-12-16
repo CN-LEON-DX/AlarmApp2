@@ -3,14 +3,10 @@ package com.example.alarmapp.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +54,7 @@ public class ClockFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        sharedPreferences = getContext().getSharedPreferences("app",Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(requireContext()).getSharedPreferences("app",Context.MODE_PRIVATE);
         boolean isFormat = sharedPreferences.getBoolean("isFormatClock",false);
         if (isFormat) textClock.setFormat24Hour("HH:mm:ss");
         else textClock.setFormat24Hour("HH:mm");
@@ -95,7 +91,7 @@ public class ClockFragment extends Fragment{
     @Override
     public void onStop() {
         super.onStop();
-        sharedPreferences = getContext().getSharedPreferences("sharedPrefsClock",Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(requireContext()).getSharedPreferences("sharedPrefsClock",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         //editor.putBoolean("isFormat",);
         editor.apply();
@@ -138,7 +134,6 @@ public class ClockFragment extends Fragment{
             String city=data.getStringExtra("city");
             String timeDifferences=data.getStringExtra("timeDifferences");
             String timeZone = data.getStringExtra("timeZone");
-            boolean isDefault= data.getBooleanExtra("isDefault",false);
             boolean isSelected =isItemExists(city);
 
             if(!isSelected){
@@ -178,8 +173,8 @@ public class ClockFragment extends Fragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(R.string.messageDeleteItem)
                 .setTitle(R.string.titleAlertDialog);
-        builder.setPositiveButton("không",(dialog, which) ->{clockRecyclerAdapter.notifyItemChanged(position);});
-        builder.setNegativeButton("xác nhận",(dialog, which) ->
+        builder.setPositiveButton(R.string.No,(dialog, which) ->{clockRecyclerAdapter.notifyItemChanged(position);});
+        builder.setNegativeButton(R.string.accept,(dialog, which) ->
         {
             clockList.remove(position);
             clockRecyclerAdapter.notifyItemRemoved(position);

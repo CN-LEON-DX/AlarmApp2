@@ -1,17 +1,12 @@
 package com.example.alarmapp.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.example.alarmapp.Base.Clock;
@@ -23,7 +18,7 @@ import java.util.List;
 public class SelectClockAdapter extends ArrayAdapter<Clock> {
     private final List<Clock> listSelectClock;
     private List<Clock> originalList;
-    private Context context;
+    private final Context context;
 
     public SelectClockAdapter(Context context, List<Clock> listSelectClock) {
         super(context, 0, listSelectClock);
@@ -45,16 +40,16 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
         TextView tvCity = listItemView.findViewById(R.id.tvCity);
         TextView tvTime = listItemView.findViewById(R.id.tvTimeCurrent);
         tvGmt.setVisibility(View.INVISIBLE);
-        tvCity.setText(clock.getCity());
-        tvTime.setText(clock.calculateTime(clock.getTimeZone()));
-        tvGmt.setText(clock.getTimeDifferences());
+        if (clock != null) {
+            tvCity.setText(clock.getCity());
+            tvTime.setText(Clock.calculateTime(clock.getTimeZone()));
+            tvGmt.setText(clock.getTimeDifferences());
+        }
 
         return listItemView;
     }
-    //luus setting
-    //gửi setting đến broadcast
-    //nếu cần sửa báo thức
 
+    @NonNull
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -89,7 +84,6 @@ public class SelectClockAdapter extends ArrayAdapter<Clock> {
                 clear();
                 addAll((List<Clock>) results.values);
                 notifyDataSetChanged();
-                if(((List<Clock>) results.values).isEmpty()) Toast.makeText(context,"khong co thanh pho ban tim kiem",Toast.LENGTH_SHORT).show();
             }
         };
     }

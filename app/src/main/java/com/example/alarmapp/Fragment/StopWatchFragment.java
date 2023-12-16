@@ -4,10 +4,8 @@ package com.example.alarmapp.Fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import com.example.alarmapp.Base.StopWatch;
 import com.example.alarmapp.Database.StopWatchDatabase;
 import com.example.alarmapp.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
