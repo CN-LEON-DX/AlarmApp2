@@ -9,4 +9,11 @@
         <item name="android:textColor">@color/white</item> <!-- color for colon -->
         <item name="android:colorControlNormal">@color/white</item> <!-- color for (horizontal) delimeters -->
     </style>
+
+    <!-- Define your custom theme -->
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@color/grey</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <!-- Add more style attributes as needed -->
+    </style>
 </resources>

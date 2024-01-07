@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="@color/black"
+    android:layout_height="wrap_content">
 
-    <RadioButton
-        android:id="@+id/radioButton"
+    <CheckBox
+        android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RadioButton" />
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:clickable="false"
+        android:buttonTint="@color/grey" />
+
+    <RelativeLayout
+        android:id="@+id/item_recycler_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@id/checkBox">
+
+        <TextView
+            android:id="@+id/tvTime_itemDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:text="09:08"
+            android:textColor="@color/white"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/tvMessage_itemDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTime_itemDelete"
+            android:layout_marginRight="20dp"
+            android:text="@string/bao_thuc"
+            android:textColor="@color/turnOnMessageAlarm"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvRepeat_itemDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTime_itemDelete"
+            android:layout_toRightOf="@id/tvMessage_itemDelete"
+            android:text="thứ 2"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
 </RelativeLayout>

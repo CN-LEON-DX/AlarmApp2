@@ -21,11 +21,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alarmapp.Activity.DeleteActivity;
 import com.example.alarmapp.Activity.SelectClockActivity;
-import com.example.alarmapp.Adapter.Clock_Recycler_Adapter;
+import com.example.alarmapp.Adapter.ClockAdapter;
 import com.example.alarmapp.Base.Clock;
 
+import com.example.alarmapp.Base.SwipeToDeleteCLock;
 import com.example.alarmapp.Database.WatchTimeCityDatabase;
+import com.example.alarmapp.Interface.OnItemClockClickListener;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,16 +40,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class ClockFragment extends Fragment{
+public class ClockFragment extends Fragment implements OnItemClockClickListener {
 
     private List<Clock> clockList;
     private FloatingActionButton fabAdd_Clock;
     private TextView tvDate;
     private WatchTimeCityDatabase database;
-    private Clock_Recycler_Adapter clockRecyclerAdapter;
+    private ClockAdapter clockAdapter;
     private RecyclerView recyclerView_Clock;
     private TextClock textClock;
     private SharedPreferences sharedPreferences;
+    private static final int REQUEST_CODE_SELECT_NEW_CLOCK = 99;
+    private static final int RESULT_CODE_SELECT_NEW_CLOCK = 99;
+    private static final int REQUEST_CODE_DELETE_MANY_CLOCK = 98;
+    private static final int RESULT_CODE_DELETE_MANY_CLOCK = 98;
     public ClockFragment() {
         // Required empty public constructor
     }
@@ -73,18 +80,18 @@ public class ClockFragment extends Fragment{
         //initialize object
         clockList = new ArrayList<>();
         database= new WatchTimeCityDatabase(getContext());
-        clockRecyclerAdapter = Clock_Recycler_Adapter.createInstance();
         //set Adapter
-        clockRecyclerAdapter.submitList(clockList);
+        clockAdapter= new ClockAdapter(clockList,getContext(),this);
         recyclerView_Clock.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView_Clock.setAdapter(clockRecyclerAdapter);
+        recyclerView_Clock.setAdapter(clockAdapter);
         //set event
         setListenerForFabButton();
         //set text tvDate
         setDataForTvDate();
         initRecyclerViewWhenStart();
-        //set event delete item
-        setEventDeleteItemRecyclerView();
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCLock(database,this,clockAdapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView_Clock);
         return view;
     }
 
@@ -109,7 +116,6 @@ public class ClockFragment extends Fragment{
             clockAdapter.setTimeDifferences(clockAdapter.getFormattedTime(Integer.parseInt(timeDifferences)));
             clockAdapter.setTimeZone(timeZone);
             clockList.add(clockAdapter);
-            clockRecyclerAdapter.notifyItemInserted(clockList.size());
         }
     }
     public void setListenerForFabButton(){
@@ -126,27 +132,37 @@ public class ClockFragment extends Fragment{
         }
         return false;
     }
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==99&&resultCode==99&&data!=null){
-            Clock clock = new Clock();
-            String city=data.getStringExtra("city");
-            String timeDifferences=data.getStringExtra("timeDifferences");
-            String timeZone = data.getStringExtra("timeZone");
-            boolean isSelected =isItemExists(city);
-
-            if(!isSelected){
-                database.putData(new Clock(city,timeDifferences,timeZone));
-                clock.setCity(city);
-                if(timeDifferences!=null)
-                    clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
-                clock.setTimeZone(timeZone);
-                clockList.add(0,clock);
-                clockRecyclerAdapter.notifyItemInserted(0);
-
-            }else Toast.makeText(getContext(),R.string.notifyUserSelectedThisCity,Toast.LENGTH_LONG).show();
+        if(requestCode==REQUEST_CODE_SELECT_NEW_CLOCK&&resultCode==RESULT_CODE_SELECT_NEW_CLOCK&&data!=null){
+            addNewClock(data);
         }
+        if(requestCode == REQUEST_CODE_DELETE_MANY_CLOCK&&resultCode==RESULT_CODE_DELETE_MANY_CLOCK&&data!=null){
+            clockList.clear();
+            ArrayList<Clock> resultList=data.getParcelableArrayListExtra("resultListClock");
+            if(resultList!=null) clockList.addAll(resultList);
+            clockAdapter.notifyDataSetChanged();
+        }
+
+    }
+    private void addNewClock(Intent data){
+        Clock clock = new Clock();
+        String city=data.getStringExtra("city");
+        String timeDifferences=data.getStringExtra("timeDifferences");
+        String timeZone = data.getStringExtra("timeZone");
+        boolean isSelected =isItemExists(city);
+
+        if(!isSelected){
+            database.putData(new Clock(city,timeDifferences,timeZone));
+            clock.setCity(city);
+            if(timeDifferences!=null)
+                clock.setTimeDifferences(clock.getFormattedTime(Integer.parseInt(timeDifferences)));
+            clock.setTimeZone(timeZone);
+            clockList.add(0,clock);
+            clockAdapter.notifyItemInserted(0);
+        }else Toast.makeText(getContext(),R.string.notifyUserSelectedThisCity,Toast.LENGTH_LONG).show();
     }
     public void setDataForTvDate(){
         Date currentDate = Calendar.getInstance().getTime();
@@ -154,35 +170,14 @@ public class ClockFragment extends Fragment{
         String date =dateFormat.format(currentDate);
         tvDate.setText(date);
     }
-    private void setEventDeleteItemRecyclerView(){
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallBack=new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                showDialogDeleteItem(position);
-            }
-        };
-        new ItemTouchHelper(itemTouchHelperCallBack).attachToRecyclerView(recyclerView_Clock);
+    @Override
+    public void setOnLongClickItemClockListener(int position) {
+        for(Clock clock:clockList) clock.setChecked(false);
+        Clock clock = clockList.get(position);
+        clock.setChecked(true);
+        Intent intent = new Intent(getContext(), DeleteActivity.class);
+        intent.putExtra("requestCode",REQUEST_CODE_DELETE_MANY_CLOCK);
+        intent.putExtra("listClock",new ArrayList<>(clockList));
+        startActivityForResult(intent,REQUEST_CODE_DELETE_MANY_CLOCK);
     }
-    private void showDialogDeleteItem(int position){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(R.string.messageDeleteItem)
-                .setTitle(R.string.titleAlertDialog);
-        builder.setPositiveButton(R.string.No,(dialog, which) ->{clockRecyclerAdapter.notifyItemChanged(position);});
-        builder.setNegativeButton(R.string.accept,(dialog, which) ->
-        {
-            clockList.remove(position);
-            clockRecyclerAdapter.notifyItemRemoved(position);
-            Clock clock = clockList.get(position);
-            database.deleteData(clock);
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
 }

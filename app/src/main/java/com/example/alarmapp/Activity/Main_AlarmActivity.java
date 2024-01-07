@@ -1,5 +1,6 @@
 package com.example.alarmapp.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
@@ -38,7 +40,7 @@ public class Main_AlarmActivity extends AppCompatActivity {
     private Button btnSetting;
     private ImageView imageSetting;
     private  ViewPager2 viewPager;
-    private TextView tvEdit;
+
     private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -69,13 +71,12 @@ public class Main_AlarmActivity extends AppCompatActivity {
         imageSetting = findViewById(R.id.imageSetting);
         btnSetting=findViewById(R.id.btn_setting);
         tabLayout = findViewById(R.id.tabLayout);
-        tvEdit = findViewById(R.id.tvEdit);
         viewPager = findViewById(R.id.viewPager2);
-        viewPager.setUserInputEnabled(false);
         /*
             initialize object
         */
         viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(viewPagerAdapter);
         // set event change Fragment of View Pager
         setEventChangeFragmentForViewPager();
         // set event for tabLayout
@@ -84,6 +85,7 @@ public class Main_AlarmActivity extends AppCompatActivity {
         setEventImageSetting();
         //set event btn setting
         setEventButtonSetting();
+        viewPager.setUserInputEnabled(false);
         requestPermission();
         IntentFilter intentFilter = new IntentFilter("com.example.ACTION_SEND_DATA");
         registerReceiver(dataReceiver,intentFilter);
@@ -117,7 +119,6 @@ public class Main_AlarmActivity extends AppCompatActivity {
         });
     }
     public void setEventChangeFragmentForViewPager(){
-        viewPager.setAdapter(viewPagerAdapter);
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {
                     switch (position){
@@ -136,11 +137,8 @@ public class Main_AlarmActivity extends AppCompatActivity {
     }
     private void setEventImageSetting(){
         imageSetting.setOnClickListener(v -> {
-            if(btnSetting.getVisibility() == View.VISIBLE){
-                btnSetting.setVisibility(View.GONE);
-            } else {
-                btnSetting.setVisibility(View.VISIBLE);
-            }
+            if(btnSetting.getVisibility() == View.VISIBLE) btnSetting.setVisibility(View.GONE);
+            else btnSetting.setVisibility(View.VISIBLE);
         });
     }
     private void setEventButtonSetting(){

@@ -10,28 +10,37 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.alarmapp.Activity.CreateNewAlarmActivity;
+import com.example.alarmapp.Activity.DeleteActivity;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
 import com.example.alarmapp.Base.Alarm;
-import com.example.alarmapp.Base.SwipToDeleteAlarm;
+import com.example.alarmapp.Base.SwipeToDeleteAlarm;
 import com.example.alarmapp.Database.AlarmDataBase;
+import com.example.alarmapp.Interface.OnItemAlarmClickListener;
 import com.example.alarmapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.OnItemClickListener{
+public class AlarmFragment extends Fragment  implements   OnItemAlarmClickListener {
     private FloatingActionButton fabAdd_Alarm;
     private RecyclerView recyclerView_Alarm;
     private List<Alarm> alarmList;
     private Alarm_Recycler_Adapter adapter_Alarm;
     private AlarmDataBase dataBase;
     private int idAlarm=0;
+    private static final int REQUEST_CODE_NEW_ALARM = 99;
+    private static final int REQUEST_CODE_CHANGE_ALARM = 98;
+    private static final int REQUEST_CODE_REMOVE_MANY_ALARM=97;
+    private static final int RESULT_CODE_NEW_ALARM=99;
+    private static final int RESULT_CODE_CHANGE_ALARM = 98;
+    private static final int RESULT_CODE_REMOVE_MANY_ALARM=97;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -57,7 +66,7 @@ public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.
         //set event
         setEventFab();
         // Tạo và thiết lập ItemTouchHelper
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipToDeleteAlarm(adapter_Alarm,this,dataBase));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteAlarm(adapter_Alarm,this,dataBase));
         itemTouchHelper.attachToRecyclerView(recyclerView_Alarm);
         return view;
     }
@@ -81,8 +90,8 @@ public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.
     private void setEventFab(){
         fabAdd_Alarm.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CreateNewAlarmActivity.class);
-            intent.putExtra("requestCode",99);
-            startActivityForResult(intent,99);
+            intent.putExtra("requestCode",REQUEST_CODE_NEW_ALARM);
+            startActivityForResult(intent,REQUEST_CODE_NEW_ALARM);
         });
     }
     private Alarm getDataFromIntentResult(Intent data){
@@ -94,17 +103,18 @@ public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.
         boolean isRepeat = data.getBooleanExtra("isRepeatCreate",false);
         return new Alarm(time,++idAlarm,true,name,sound,repeat,isVibrate,isRepeat);
     }
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==99&&resultCode==99){
+        if(requestCode==REQUEST_CODE_NEW_ALARM&&resultCode==RESULT_CODE_NEW_ALARM&&data!=null){
             Alarm newAlarm = getDataFromIntentResult(data);
             newAlarm.createAlarm(getContext());
             alarmList.add(0,newAlarm);
             adapter_Alarm.notifyItemInserted(0);
             dataBase.putData(newAlarm);
         }
-        if(requestCode==98&&resultCode==98){
+        if(requestCode==REQUEST_CODE_CHANGE_ALARM&&resultCode==RESULT_CODE_CHANGE_ALARM&&data!=null){
             int position =data.getIntExtra("position",-1);
             if(position!=-1){
                 Alarm newAlarm = getDataFromIntentResult(data);
@@ -123,13 +133,25 @@ public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.
                 dataBase.updateAlarm(oldAlarm,newAlarm);
             }
         }
+        if(requestCode==REQUEST_CODE_REMOVE_MANY_ALARM&&resultCode==RESULT_CODE_REMOVE_MANY_ALARM&&data!=null){
+            alarmList.clear();
+            dataBase.deleteAllData();
+            ArrayList<Alarm> resultList = data.getParcelableArrayListExtra("resultListAlarm");
+            if(resultList!=null) alarmList.addAll(resultList);
+            adapter_Alarm.notifyDataSetChanged();
+            for(Alarm alarm:alarmList) {
+                dataBase.putData((alarm));
+            }
+
+        }
     }
+
     @Override
-    public void onItemClick(int position) {
+    public void setOnItemClickListener(int position) {
         Alarm alarm = alarmList.get(position);
         // Handle item click here
         Intent intent = new Intent(getContext(),CreateNewAlarmActivity.class);
-        intent.putExtra("requestCode",98);
+        intent.putExtra("requestCode",REQUEST_CODE_CHANGE_ALARM);
         intent.putExtra("position",position);
         intent.putExtra("sound",alarm.getSound());
         intent.putExtra("isRepeat",alarm.isRepeat());
@@ -137,12 +159,18 @@ public class AlarmFragment extends Fragment  implements  Alarm_Recycler_Adapter.
         intent.putExtra("repeat",alarm.getRepeat());
         intent.putExtra("nameAlarm", alarm.getMessage());
         intent.putExtra("time", alarm.getTime_alarm());
-        startActivityForResult(intent,98);
+        startActivityForResult(intent,REQUEST_CODE_CHANGE_ALARM);
     }
 
-    @SuppressLint("DefaultLocale")
-    private String formatTime(int hour, int minute) {
-        return String.format("%02d:%02d", hour, minute);
+    @Override
+    public void setOnItemLongClickListener( int position) {
+        for(Alarm alarm: alarmList) alarm.setChecked(false);
+        Alarm alarm = alarmList.get(position);
+        alarm.setChecked(true);
+        Intent intent = new Intent(getContext(), DeleteActivity.class);
+        intent.putExtra("listAlarm",new ArrayList<>(alarmList));
+        intent.putExtra("position",position);
+        intent.putExtra("requestCode",REQUEST_CODE_REMOVE_MANY_ALARM);
+        startActivityForResult(intent,REQUEST_CODE_REMOVE_MANY_ALARM);
     }
-
 }

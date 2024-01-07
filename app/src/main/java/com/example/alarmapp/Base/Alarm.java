@@ -4,22 +4,27 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.alarmapp.Broadcast.Broadcast_Alarm_Receiver;
 
 import java.util.Calendar;
 
-public class Alarm {
+public class Alarm implements Parcelable {
     private String time_alarm;
     private int id;
-    private Boolean isTurnOn = true;
+    private Boolean isTurnOn ;
     private String message;
     private String sound;
     private String repeat;
     private boolean isVibrate;
-    private boolean isRepeat = false;
+    private boolean isRepeat ;
+    private boolean isChecked=false;
 
     public Alarm(String time_alarm, int id, Boolean isTurnOn, String message, String sound, String repeat, boolean isVibrate, boolean isRepeat) {
         this.time_alarm = time_alarm;
@@ -94,6 +99,13 @@ public class Alarm {
 
     public void setRepeat(boolean repeat) {
         isRepeat = repeat;
+    }
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public void createAlarm(Context context) {
@@ -189,5 +201,44 @@ public class Alarm {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+    }
+    protected Alarm(Parcel in) {
+        time_alarm = in.readString();
+        id = in.readInt();
+        isTurnOn = in.readByte() != 0;
+        message = in.readString();
+        sound = in.readString();
+        repeat = in.readString();
+        isVibrate = in.readByte() != 0;
+        isRepeat = in.readByte() != 0;
+        isChecked = in.readByte() !=0;
+    }
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(time_alarm);
+        dest.writeInt(id);
+        dest.writeByte((byte) (isTurnOn ? 1 : 0));
+        dest.writeString(message);
+        dest.writeString(sound);
+        dest.writeString(repeat);
+        dest.writeByte((byte) (isVibrate ? 1 : 0));
+        dest.writeByte((byte) (isRepeat ? 1 : 0));
+        dest.writeByte((byte) (isChecked? 1 : 0));
     }
 }

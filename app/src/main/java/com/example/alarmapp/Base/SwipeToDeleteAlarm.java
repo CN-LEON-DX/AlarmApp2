@@ -11,14 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.alarmapp.Adapter.Alarm_Recycler_Adapter;
 import com.example.alarmapp.Database.AlarmDataBase;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class SwipToDeleteAlarm extends ItemTouchHelper.SimpleCallback {
+public class SwipeToDeleteAlarm extends ItemTouchHelper.SimpleCallback {
     private Alarm_Recycler_Adapter adapter;
     private Fragment fragment;
     private AlarmDataBase dataBase;
-    public SwipToDeleteAlarm (Alarm_Recycler_Adapter adapter, Fragment fragment, AlarmDataBase dataBase ){
+    public SwipeToDeleteAlarm(Alarm_Recycler_Adapter adapter, Fragment fragment, AlarmDataBase dataBase ){
         super(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
         this.adapter = adapter;
         this.fragment = fragment;
@@ -42,13 +39,10 @@ public class SwipToDeleteAlarm extends ItemTouchHelper.SimpleCallback {
         builder.setPositiveButton("không", (dialog, which) -> {
             adapter.notifyItemChanged(position);
         });
-        builder.setNegativeButton("xác nhận", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Alarm alarm = adapter.getAlarm(position);
-                adapter.removeAlarm(position);
-                dataBase.deleteData(alarm);
-            }
+        builder.setNegativeButton("xác nhận", (dialog, which) -> {
+            Alarm alarm = adapter.getAlarm(position);
+            adapter.removeAlarm(position);
+            dataBase.deleteData(alarm);
         });
         builder.show();
     }

@@ -1,5 +1,6 @@
 package com.example.alarmapp.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -79,8 +81,8 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             showDialogInputNameAlarm(input);
         });
     }
-    private void showDialogInputNameAlarm(EditText input){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void showDialogInputNameAlarm(@NonNull EditText input){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.CustomAlertDialog);
         builder.setTitle("Tên báo thức");
         builder.setView(input);
         builder.setPositiveButton("OK", (dialog, which) -> {
@@ -89,6 +91,11 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             tvNameAlarm.setText(userInput);
         });
         builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
+        builder.setOnCancelListener(dialog -> {
+            input.setText("");
+            ((ViewGroup) input.getParent()).removeView(input);
+
+        });
         builder.show();
     }
     private void checkRepeat(String day,boolean[] checkedItem){
@@ -131,8 +138,8 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
             String repeatAlarm = intent.getStringExtra("repeat");
             tvRepeat.setText(repeatAlarm);
             String[] listRepeatItem = repeatAlarm.split(", ");
-            for(int i=0;i<listRepeatItem.length;++i){
-                checkRepeat(listRepeatItem[i],checkedItems);
+            for (String s : listRepeatItem) {
+                checkRepeat(s, checkedItems);
             }
         }
         return checkedItems;
@@ -176,8 +183,8 @@ public class CreateNewAlarmActivity extends AppCompatActivity {
         builder.show();
     }
     private boolean isAllItemTrue(boolean[] checkedItem){
-        for(int i=0;i<checkedItem.length;++i){
-            if(!checkedItem[i]) return false;
+        for (boolean b : checkedItem) {
+            if (!b) return false;
         }
         return true;
     }

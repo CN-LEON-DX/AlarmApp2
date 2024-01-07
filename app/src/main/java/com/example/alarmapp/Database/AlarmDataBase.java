@@ -98,7 +98,6 @@ public class AlarmDataBase extends SQLiteOpenHelper {
     }
     public void deleteData(Alarm alarm){
         SQLiteDatabase db = this.getReadableDatabase();
-        Log.i("tag_id","id:"+alarm.getId());
         db.delete(TABLE_NAME,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(alarm.getId())});
         db.close();
     }
@@ -121,5 +120,9 @@ public class AlarmDataBase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_STATUS,isTrue(alarm.getTurnOn()));
         db.update(TABLE_NAME,values,COLUMN_ID_NAME+"=?",new String[]{String.valueOf(alarm.getId())});
+    }
+    public void deleteAllData(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(TABLE_NAME,null,null);
     }
 }

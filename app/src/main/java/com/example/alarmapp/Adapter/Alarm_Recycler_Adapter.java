@@ -1,6 +1,8 @@
 package com.example.alarmapp.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alarmapp.Base.Alarm;
 import com.example.alarmapp.Database.AlarmDataBase;
+import com.example.alarmapp.Interface.OnItemAlarmClickListener;
 import com.example.alarmapp.R;
 
 import java.util.List;
 
-public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_Adapter.AlarmViewHolder> {
+public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_Adapter.AlarmViewHolder>{
     private final List<Alarm> alarmList;
     private final Context context;
     private final AlarmDataBase alarmDataBase;
-    private final OnItemClickListener onItemClickListener;
+    private final OnItemAlarmClickListener listener;
 
-
-    public Alarm_Recycler_Adapter(Context context, List<Alarm> alarmList,AlarmDataBase dataBase, OnItemClickListener onItemClickListener) {
+    public Alarm_Recycler_Adapter(Context context, List<Alarm> alarmList, AlarmDataBase dataBase, OnItemAlarmClickListener listener) {
         this.context = context;
         this.alarmList = alarmList;
         this.alarmDataBase=dataBase;
-        this.onItemClickListener = onItemClickListener;
+        this.listener = listener;
     }
     public Alarm getAlarm(int position){
         return alarmList.get(position);
@@ -47,6 +49,24 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         holder.setData(alarmList.get(position));
         holder.setEventSwitch(context,alarmList.get(position));
+        setClickItem(holder,position);
+        setLongClickItem(holder, position);
+    }
+    private void setClickItem(@NonNull AlarmViewHolder holder, int position){
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.setOnItemClickListener(position);
+            }
+        });
+    }
+    private void setLongClickItem(AlarmViewHolder holder,int position){
+        holder.itemView.setOnLongClickListener(v -> {
+            if(listener !=null){
+                listener.setOnItemLongClickListener(position);
+                return true;
+            }
+            return false;
+        });
     }
     @Override
     public int getItemCount() {
@@ -75,13 +95,8 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
             tvMessage = itemView.findViewById(R.id.tvMessage_itemAlarm);
             switchCompat = itemView.findViewById(R.id.switch_item_alarm);
             tvRepeat = itemView.findViewById(R.id.tvRepeat_itemAlarm);
-            itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position);
-                }
-            });
         }
+
         private void setVisibilityUI(Alarm alarm){
             if(!alarm.getMessage().equals("Báo thức"))
                 tvMessage.setVisibility(View.VISIBLE);
@@ -124,11 +139,6 @@ public class Alarm_Recycler_Adapter extends RecyclerView.Adapter<Alarm_Recycler_
                 alarmDataBase.updateStatusSwitch(alarm);
             });
         }
-
-
-    }
-    public interface OnItemClickListener {
-        void onItemClick(int position);
     }
 }
 
